@@ -1,0 +1,6 @@
+{
+  "name": "Virat Kohli Showcase",
+  "description": "Interactive 3D showcase, career statistics, and biography portal for Virat Kohli.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
