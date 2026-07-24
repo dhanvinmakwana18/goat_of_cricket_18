@@ -239,7 +239,7 @@ export const GoogleDriveSection: React.FC = () => {
 
   // Helper for file icon
   const getFileIcon = (mimeType: string) => {
-    if (mimeType.includes('folder')) return <Folder className="w-5 h-5 text-[#eab308]" />;
+    if (mimeType.includes('folder')) return <Folder className="w-5 h-5 text-[#d3122a]" />;
     if (mimeType.includes('image')) return <Image className="w-5 h-5 text-blue-400" />;
     if (mimeType.includes('video')) return <Video className="w-5 h-5 text-purple-400" />;
     if (mimeType.includes('json') || mimeType.includes('code') || mimeType.includes('javascript'))
@@ -264,7 +264,7 @@ export const GoogleDriveSection: React.FC = () => {
       {/* Header Title */}
       <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
         <div>
-          <div class="inline-block px-3 py-1 border border-[#eab308]/30 bg-[#eab308]/5 text-[10px] font-bold text-[#eab308] uppercase tracking-[0.2em] mb-3">
+          <div class="inline-block px-3 py-1 border border-[#d3122a]/40 bg-[#d3122a]/10 text-[10px] font-bold text-[#d3122a] uppercase tracking-[0.2em] mb-3">
             <span class="flex items-center gap-1.5">
               <HardDrive className="w-3.5 h-3.5" /> Workspace Cloud Storage
             </span>
@@ -272,16 +272,16 @@ export const GoogleDriveSection: React.FC = () => {
           <h2 class="text-4xl font-black text-white uppercase tracking-tight font-brand italic">
             Google Drive Integration
           </h2>
-          <div class="h-1.5 w-24 bg-[#eab308] mt-2"></div>
+          <div class="h-1.5 w-24 bg-[#d3122a] mt-2"></div>
         </div>
 
         {/* User Status Bar */}
         {user ? (
           <div class="flex items-center gap-4 bg-[#07090d] border border-white/10 p-3">
             {user.photoURL ? (
-              <img src={user.photoURL} alt={user.displayName || 'User'} class="w-8 h-8 rounded-full border border-[#eab308]" />
+              <img src={user.photoURL} alt={user.displayName || 'User'} class="w-8 h-8 rounded-full border border-[#d3122a]" />
             ) : (
-              <div class="w-8 h-8 bg-[#eab308] text-black font-black flex items-center justify-center text-xs">
+              <div class="w-8 h-8 bg-[#d3122a] text-white font-black flex items-center justify-center text-xs">
                 {user.displayName?.charAt(0) || user.email?.charAt(0) || 'U'}
               </div>
             )}
@@ -291,7 +291,7 @@ export const GoogleDriveSection: React.FC = () => {
             </div>
             <button
               onClick={handleSignOut}
-              class="p-2 text-white/40 hover:text-[#eab308] hover:bg-white/5 transition-colors border-l border-white/10 ml-2"
+              class="p-2 text-white/40 hover:text-[#d3122a] hover:bg-white/5 transition-colors border-l border-white/10 ml-2"
               title="Sign Out"
             >
               <LogOut className="w-4 h-4" />
@@ -351,7 +351,7 @@ export const GoogleDriveSection: React.FC = () => {
       {/* Main Drive Workspace Container */}
       {!user ? (
         <div class="bg-[#07090d] border border-white/5 p-10 text-center space-y-6">
-          <div class="w-16 h-16 bg-[#eab308]/10 text-[#eab308] border border-[#eab308]/20 flex items-center justify-center mx-auto">
+          <div class="w-16 h-16 bg-[#d3122a]/10 text-[#d3122a] border border-[#d3122a]/20 flex items-center justify-center mx-auto">
             <HardDrive className="w-8 h-8" />
           </div>
           <div class="max-w-md mx-auto space-y-2">
@@ -365,7 +365,7 @@ export const GoogleDriveSection: React.FC = () => {
           <button
             onClick={handleSignIn}
             disabled={loading}
-            class="px-8 py-3.5 bg-[#eab308] text-black font-black uppercase text-xs tracking-widest hover:bg-white transition-all inline-flex items-center gap-2"
+            class="px-8 py-3.5 bg-[#d3122a] text-white font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all inline-flex items-center gap-2 cursor-pointer shadow-lg shadow-[#d3122a]/30"
           >
             <Sparkles className="w-4 h-4" />
             <span>Connect Google Drive</span>
@@ -384,7 +384,7 @@ export const GoogleDriveSection: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && loadFiles(searchQuery)}
-                class="w-full bg-[#05070a] border border-white/10 pl-9 pr-4 py-2.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#eab308]"
+                class="w-full bg-[#05070a] border border-white/10 pl-9 pr-4 py-2.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#d3122a]"
               />
             </div>
 
@@ -396,7 +396,7 @@ export const GoogleDriveSection: React.FC = () => {
                 class="px-3.5 py-2.5 bg-white/5 hover:bg-white/10 text-white text-[10px] font-bold uppercase tracking-wider border border-white/10 flex items-center gap-2"
                 title="Refresh Files"
               >
-                <RefreshCw class={`w-3.5 h-3.5 ${fetchingFiles ? 'animate-spin text-[#eab308]' : ''}`} />
+                <RefreshCw class={`w-3.5 h-3.5 ${fetchingFiles ? 'animate-spin text-[#d3122a]' : ''}`} />
                 <span>Refresh</span>
               </button>
 
@@ -404,7 +404,7 @@ export const GoogleDriveSection: React.FC = () => {
                 onClick={() => setShowFolderModal(true)}
                 class="px-3.5 py-2.5 bg-white/5 hover:bg-white/10 text-white text-[10px] font-bold uppercase tracking-wider border border-white/10 flex items-center gap-2"
               >
-                <FolderPlus className="w-3.5 h-3.5 text-[#eab308]" />
+                <FolderPlus className="w-3.5 h-3.5 text-[#d3122a]" />
                 <span>New Folder</span>
               </button>
 
@@ -412,12 +412,12 @@ export const GoogleDriveSection: React.FC = () => {
                 onClick={() => setShowNoteModal(true)}
                 class="px-3.5 py-2.5 bg-white/5 hover:bg-white/10 text-white text-[10px] font-bold uppercase tracking-wider border border-white/10 flex items-center gap-2"
               >
-                <FileText className="w-3.5 h-3.5 text-[#eab308]" />
+                <FileText className="w-3.5 h-3.5 text-[#d3122a]" />
                 <span>Save Archive Note</span>
               </button>
 
               {/* File Upload Input */}
-              <label class="px-4 py-2.5 bg-[#eab308] text-black text-[10px] font-black uppercase tracking-widest hover:bg-white cursor-pointer transition-colors flex items-center gap-2">
+              <label class="px-4 py-2.5 bg-[#d3122a] text-white text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black cursor-pointer transition-colors flex items-center gap-2 shadow-md shadow-[#d3122a]/20">
                 <Upload className="w-3.5 h-3.5" />
                 <span>{uploading ? 'Uploading...' : 'Upload File'}</span>
                 <input type="file" onChange={handleFileUpload} disabled={uploading} class="hidden" />
@@ -429,7 +429,7 @@ export const GoogleDriveSection: React.FC = () => {
           <div class="bg-[#07090d] border border-white/5 p-6">
             {fetchingFiles ? (
               <div class="py-12 text-center text-white/40 space-y-3">
-                <RefreshCw className="w-8 h-8 animate-spin text-[#eab308] mx-auto" />
+                <RefreshCw className="w-8 h-8 animate-spin text-[#d3122a] mx-auto" />
                 <p class="text-xs uppercase font-mono tracking-widest">Fetching Drive Contents...</p>
               </div>
             ) : files.length === 0 ? (
@@ -443,13 +443,13 @@ export const GoogleDriveSection: React.FC = () => {
                 {files.map((f) => (
                   <div
                     key={f.id}
-                    class="p-4 bg-[#05070a] border border-white/5 hover:border-[#eab308]/40 transition-colors flex flex-col justify-between group space-y-3"
+                    class="p-4 bg-[#05070a] border border-white/5 hover:border-[#d3122a]/40 transition-colors flex flex-col justify-between group space-y-3"
                   >
                     <div class="flex items-start justify-between gap-3">
                       <div class="flex items-center gap-3 overflow-hidden">
                         <div class="p-2 bg-white/5 shrink-0">{getFileIcon(f.mimeType)}</div>
                         <div class="overflow-hidden">
-                          <p class="text-xs font-bold text-white truncate group-hover:text-[#eab308] transition-colors">
+                          <p class="text-xs font-bold text-white truncate group-hover:text-[#d3122a] transition-colors">
                             {f.name}
                           </p>
                           <span class="text-[9px] font-mono text-white/30 uppercase block mt-0.5">
@@ -468,7 +468,7 @@ export const GoogleDriveSection: React.FC = () => {
                             href={f.webViewLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="p-1.5 text-white/60 hover:text-[#eab308] hover:bg-white/5 transition-colors"
+                            class="p-1.5 text-white/60 hover:text-[#d3122a] hover:bg-white/5 transition-colors"
                             title="Open in Google Drive"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
@@ -501,7 +501,7 @@ export const GoogleDriveSection: React.FC = () => {
           >
             <div class="flex items-center justify-between border-b border-white/10 pb-4">
               <h3 class="text-lg font-black text-white font-brand uppercase flex items-center gap-2">
-                <FolderPlus className="w-5 h-5 text-[#eab308]" /> Create Drive Folder
+                <FolderPlus className="w-5 h-5 text-[#d3122a]" /> Create Drive Folder
               </h3>
               <button
                 type="button"
@@ -520,7 +520,7 @@ export const GoogleDriveSection: React.FC = () => {
                 placeholder="e.g. VK18_Cricket_Archives"
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
-                class="w-full bg-[#05070a] border border-white/10 p-3 text-xs text-white focus:outline-none focus:border-[#eab308]"
+                class="w-full bg-[#05070a] border border-white/10 p-3 text-xs text-white focus:outline-none focus:border-[#d3122a]"
               />
             </div>
 
@@ -535,7 +535,7 @@ export const GoogleDriveSection: React.FC = () => {
               <button
                 type="submit"
                 disabled={isCreatingFolder}
-                class="px-6 py-2.5 bg-[#eab308] text-black text-xs font-black uppercase tracking-widest hover:bg-white transition-colors"
+                class="px-6 py-2.5 bg-[#d3122a] text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
               >
                 {isCreatingFolder ? 'Creating...' : 'Create Folder'}
               </button>
@@ -553,7 +553,7 @@ export const GoogleDriveSection: React.FC = () => {
           >
             <div class="flex items-center justify-between border-b border-white/10 pb-4">
               <h3 class="text-lg font-black text-white font-brand uppercase flex items-center gap-2">
-                <FileText className="w-5 h-5 text-[#eab308]" /> Save Note to Drive
+                <FileText className="w-5 h-5 text-[#d3122a]" /> Save Note to Drive
               </h3>
               <button
                 type="button"
@@ -572,7 +572,7 @@ export const GoogleDriveSection: React.FC = () => {
                   required
                   value={noteTitle}
                   onChange={(e) => setNoteTitle(e.target.value)}
-                  class="w-full bg-[#05070a] border border-white/10 p-3 text-xs text-white focus:outline-none focus:border-[#eab308]"
+                  class="w-full bg-[#05070a] border border-white/10 p-3 text-xs text-white focus:outline-none focus:border-[#d3122a]"
                 />
               </div>
 
@@ -583,7 +583,7 @@ export const GoogleDriveSection: React.FC = () => {
                   required
                   value={noteContent}
                   onChange={(e) => setNoteContent(e.target.value)}
-                  class="w-full bg-[#05070a] border border-white/10 p-3 text-xs text-white focus:outline-none focus:border-[#eab308] font-mono"
+                  class="w-full bg-[#05070a] border border-white/10 p-3 text-xs text-white focus:outline-none focus:border-[#d3122a] font-mono"
                 ></textarea>
               </div>
             </div>
@@ -599,7 +599,7 @@ export const GoogleDriveSection: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSavingNote}
-                class="px-6 py-2.5 bg-[#eab308] text-black text-xs font-black uppercase tracking-widest hover:bg-white transition-colors"
+                class="px-6 py-2.5 bg-[#d3122a] text-white text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
               >
                 {isSavingNote ? 'Saving...' : 'Save to Drive'}
               </button>

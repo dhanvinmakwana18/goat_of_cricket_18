@@ -3,10 +3,14 @@ export interface CareerStat {
   matches: number;
   runs: number;
   average: number;
-  strikeRate: number;
+  strikeRate: number | string;
   centuries: number;
   fifties: number;
   highScore: string;
+  fours?: string;
+  sixes?: string;
+  catches?: number;
+  stumpings?: number;
   wickets?: number;
 }
 

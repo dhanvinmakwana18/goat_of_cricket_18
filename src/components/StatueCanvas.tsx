@@ -1,22 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { RotateCcw, Play, Pause, Sparkles, Layers } from 'lucide-react';
+import { RotateCcw, Play, Pause, Sparkles, Trophy, ZoomIn, ZoomOut } from 'lucide-react';
+import worldCupTrophyImg from '../assets/images/icc_world_cup_trophy_1784831119282.jpg';
 
 export const StatueCanvas: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [autoRotate, setAutoRotate] = useState(true);
-  const [materialTheme, setMaterialTheme] = useState<'gold' | 'platinum' | 'emerald'>('gold');
+  const [spotlightOn, setSpotlightOn] = useState(true);
 
   // Refs for animation & scene objects
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const statueGroupRef = useRef<THREE.Group | null>(null);
-  const materialsRef = useRef<{ [key: string]: THREE.MeshStandardMaterial }>({});
+  const trophyGroupRef = useRef<THREE.Group | null>(null);
+  const keyLightRef = useRef<THREE.SpotLight | null>(null);
 
-  const targetRotationX = useRef(0);
+  const targetRotationX = useRef(0.15);
   const targetRotationY = useRef(0);
+  const targetZoom = useRef(6.0);
   const isDragging = useRef(false);
   const mouseX = useRef(0);
   const mouseY = useRef(0);
@@ -26,21 +28,22 @@ export const StatueCanvas: React.FC = () => {
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    // Scene
+    // 1. Scene
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // Camera
+    // 2. Camera (FOV: 45, Position x:0, y:2, z:6 per prompt specs)
     const camera = new THREE.PerspectiveCamera(
       45,
       container.clientWidth / container.clientHeight,
       0.1,
       1000
     );
-    camera.position.set(0, 1.5, 7);
+    camera.position.set(0, 2, 6);
+    camera.lookAt(0, 0.2, 0);
     cameraRef.current = camera;
 
-    // Renderer
+    // 3. Renderer with PBR, ShadowMap & Anti-aliasing
     const renderer = new THREE.WebGLRenderer({
       canvas,
       alpha: true,
@@ -49,173 +52,374 @@ export const StatueCanvas: React.FC = () => {
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.25;
     rendererRef.current = renderer;
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    // 4. Studio Lighting Environment
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
 
-    const spotLight = new THREE.SpotLight(0xfef08a, 2.5);
-    spotLight.position.set(5, 10, 5);
-    spotLight.angle = Math.PI / 4;
-    spotLight.penumbra = 0.8;
-    scene.add(spotLight);
+    // Primary Soft Studio Key Light
+    const keyLight = new THREE.SpotLight(0xfffbeb, 4.0);
+    keyLight.position.set(4, 8, 6);
+    keyLight.angle = Math.PI / 4;
+    keyLight.penumbra = 0.6;
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.width = 1024;
+    keyLight.shadow.mapSize.height = 1024;
+    keyLight.shadow.bias = -0.0001;
+    keyLightRef.current = keyLight;
+    scene.add(keyLight);
 
-    const pointLight = new THREE.PointLight(0xffffff, 1.2);
-    pointLight.position.set(-5, 2, 2);
-    scene.add(pointLight);
+    // Chrome Highlight Spot
+    const chromeHighlight = new THREE.SpotLight(0xdfeafe, 3.0);
+    chromeHighlight.position.set(-5, 6, 4);
+    chromeHighlight.angle = Math.PI / 3;
+    chromeHighlight.penumbra = 0.8;
+    scene.add(chromeHighlight);
 
-    const fillLight = new THREE.DirectionalLight(0xeab308, 0.8);
-    fillLight.position.set(0, -5, -2);
-    scene.add(fillLight);
+    // Warm Gold Backlight
+    const goldBacklight = new THREE.PointLight(0xf59e0b, 2.5, 15);
+    goldBacklight.position.set(0, 3, -4);
+    scene.add(goldBacklight);
 
-    // Materials
-    const goldMaterial = new THREE.MeshStandardMaterial({
-      color: 0xeab308,
+    // Bottom Rim Fill Light
+    const bottomFill = new THREE.DirectionalLight(0xd3122a, 0.8);
+    bottomFill.position.set(0, -4, 3);
+    scene.add(bottomFill);
+
+    // Ground Shadow Plane
+    const shadowPlane = new THREE.Mesh(
+      new THREE.PlaneGeometry(12, 12),
+      new THREE.ShadowMaterial({ opacity: 0.35 })
+    );
+    shadowPlane.rotation.x = -Math.PI / 2;
+    shadowPlane.position.y = -2.25;
+    shadowPlane.receiveShadow = true;
+    scene.add(shadowPlane);
+
+    // 5. Materials (Exact Prompt Specs)
+    // Gold Material: color #D4AF37, metalness: 1, roughness: 0.12
+    const goldMat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color('#D4AF37'),
+      metalness: 1.0,
+      roughness: 0.12,
+    });
+
+    // Chrome Material: color #FFFFFF, metalness: 1, roughness: 0.05
+    const chromeMat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color('#FFFFFF'),
+      metalness: 1.0,
+      roughness: 0.05,
+    });
+
+    // Black Base Material: color #111111, metalness: 0.7, roughness: 0.25
+    const blackBaseMat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color('#111111'),
+      metalness: 0.7,
+      roughness: 0.25,
+    });
+
+    // White Dots Material: color #FFFFFF, roughness: 0.5
+    const whiteDotMat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color('#FFFFFF'),
+      metalness: 0.1,
+      roughness: 0.5,
+    });
+
+    // 6. Trophy Group Assembly
+    const trophyGroup = new THREE.Group();
+    trophyGroup.position.y = -0.2; // center vertically in viewport
+    trophyGroupRef.current = trophyGroup;
+
+    // --- STRUCTURE STEP 6: Base (Large circular black glossy base with stacked rings) ---
+    // Tier 1 Base Bottom Ring
+    const baseTier1 = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.6, 1.8, 0.25, 64),
+      blackBaseMat
+    );
+    baseTier1.position.y = -2.1;
+    baseTier1.castShadow = true;
+    baseTier1.receiveShadow = true;
+    trophyGroup.add(baseTier1);
+
+    // Gold Accent Ring between Tier 1 & 2
+    const baseGoldRing1 = new THREE.Mesh(
+      new THREE.TorusGeometry(1.61, 0.03, 16, 64),
+      goldMat
+    );
+    baseGoldRing1.rotation.x = Math.PI / 2;
+    baseGoldRing1.position.y = -1.97;
+    trophyGroup.add(baseGoldRing1);
+
+    // Tier 2 Middle Glossy Base (holds the white circular inlays)
+    const baseTier2Height = 0.55;
+    const baseTier2 = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.25, 1.55, baseTier2Height, 64),
+      blackBaseMat
+    );
+    baseTier2.position.y = -1.68;
+    baseTier2.castShadow = true;
+    baseTier2.receiveShadow = true;
+    trophyGroup.add(baseTier2);
+
+    // --- STRUCTURE STEP 7: White Circular Inlays around the base ---
+    const inlayCount = 12;
+    const inlayRadius = 0.11;
+    for (let i = 0; i < inlayCount; i++) {
+      const angle = (i / inlayCount) * Math.PI * 2;
+      const baseR = 1.38; // Radius on sloping surface of baseTier2
+      const x = Math.cos(angle) * baseR;
+      const z = Math.sin(angle) * baseR;
+
+      const inlayMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(inlayRadius, inlayRadius, 0.04, 32),
+        whiteDotMat
+      );
+      inlayMesh.position.set(x, -1.68, z);
+
+      // Rotate inlay to align flush with base perimeter tangent
+      inlayMesh.rotation.y = -angle + Math.PI / 2;
+      inlayMesh.rotation.z = Math.PI / 2;
+      inlayMesh.rotation.x = 0.18; // tilt along sloped edge
+
+      trophyGroup.add(inlayMesh);
+    }
+
+    // Gold Accent Ring top of Tier 2
+    const baseGoldRing2 = new THREE.Mesh(
+      new THREE.TorusGeometry(1.26, 0.035, 16, 64),
+      goldMat
+    );
+    baseGoldRing2.rotation.x = Math.PI / 2;
+    baseGoldRing2.position.y = -1.39;
+    trophyGroup.add(baseGoldRing2);
+
+    // Tier 3 Top Pedestal Cap
+    const baseTier3 = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.85, 1.22, 0.2, 64),
+      blackBaseMat
+    );
+    baseTier3.position.y = -1.28;
+    baseTier3.castShadow = true;
+    trophyGroup.add(baseTier3);
+
+    // --- STRUCTURE STEP 5: Gold Connector ---
+    // Small polished gold connector joining stem to base
+    const connectorBase = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.55, 0.75, 0.12, 48),
+      goldMat
+    );
+    connectorBase.position.y = -1.13;
+    connectorBase.castShadow = true;
+    trophyGroup.add(connectorBase);
+
+    const connectorRing = new THREE.Mesh(
+      new THREE.TorusGeometry(0.48, 0.045, 16, 48),
+      goldMat
+    );
+    connectorRing.rotation.x = Math.PI / 2;
+    connectorRing.position.y = -1.04;
+    trophyGroup.add(connectorRing);
+
+    const connectorCup = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.35, 0.48, 0.12, 48),
+      goldMat
+    );
+    connectorCup.position.y = -0.96;
+    connectorCup.castShadow = true;
+    trophyGroup.add(connectorCup);
+
+    // --- STRUCTURE STEP 4: Center Stem ---
+    // Metallic chrome blade-like stem tapering smoothly
+    const stemGeo = new THREE.CylinderGeometry(0.2, 0.28, 2.1, 32);
+    const stemMesh = new THREE.Mesh(stemGeo, chromeMat);
+    stemMesh.position.y = 0.12;
+    stemMesh.scale.set(0.65, 1.0, 1.25); // Elliptic blade-like cross-section
+    stemMesh.castShadow = true;
+    trophyGroup.add(stemMesh);
+
+    // --- STRUCTURE STEP 3: Vertical Supports ---
+    // Six identical chrome supports evenly spaced around sphere, curved inward
+    const supportCount = 6;
+    const supportCurveRadiusTop = 0.76;
+    const supportCurveRadiusMid = 0.96;
+    const supportCurveRadiusBot = 0.52;
+
+    for (let i = 0; i < supportCount; i++) {
+      const angle = (i / supportCount) * Math.PI * 2;
+
+      // 4 control points creating iconic inward curvature
+      const p0 = new THREE.Vector3(
+        Math.cos(angle) * supportCurveRadiusBot,
+        -0.92,
+        Math.sin(angle) * supportCurveRadiusBot
+      );
+      const p1 = new THREE.Vector3(
+        Math.cos(angle) * supportCurveRadiusMid,
+        0.0,
+        Math.sin(angle) * supportCurveRadiusMid
+      );
+      const p2 = new THREE.Vector3(
+        Math.cos(angle) * supportCurveRadiusTop,
+        1.25,
+        Math.sin(angle) * supportCurveRadiusTop
+      );
+      const p3 = new THREE.Vector3(
+        Math.cos(angle) * 0.68,
+        1.72,
+        Math.sin(angle) * 0.68
+      );
+
+      const supportCurve = new THREE.CubicBezierCurve3(p0, p1, p2, p3);
+      const tubeGeo = new THREE.TubeGeometry(supportCurve, 48, 0.038, 16, false);
+      const supportMesh = new THREE.Mesh(tubeGeo, chromeMat);
+      supportMesh.castShadow = true;
+      trophyGroup.add(supportMesh);
+    }
+
+    // --- STRUCTURE STEP 1: Top Sphere ---
+    // Perfect metallic gold sphere (#D4AF37, metalness: 1, roughness: 0.12)
+    const sphereRadius = 0.72;
+    const topSphereGeo = new THREE.SphereGeometry(sphereRadius, 64, 64);
+    const topSphereMesh = new THREE.Mesh(topSphereGeo, goldMat);
+    topSphereMesh.position.y = 1.72;
+    topSphereMesh.castShadow = true;
+    trophyGroup.add(topSphereMesh);
+
+    // Decorative Globe Seam lines on Gold Sphere
+    const seamMat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color('#B8860B'),
       metalness: 0.9,
-      roughness: 0.15,
-      emissive: 0x422006,
-      emissiveIntensity: 0.25,
-    });
-
-    const platinumMaterial = new THREE.MeshStandardMaterial({
-      color: 0xe2e8f0,
-      metalness: 0.95,
-      roughness: 0.1,
-      emissive: 0x1e293b,
-      emissiveIntensity: 0.2,
-    });
-
-    const emeraldMaterial = new THREE.MeshStandardMaterial({
-      color: 0x10b981,
-      metalness: 0.8,
       roughness: 0.2,
-      emissive: 0x022c22,
-      emissiveIntensity: 0.3,
     });
 
-    materialsRef.current = {
-      gold: goldMaterial,
-      platinum: platinumMaterial,
-      emerald: emeraldMaterial,
-    };
+    const equatorSeam = new THREE.Mesh(
+      new THREE.TorusGeometry(sphereRadius + 0.005, 0.012, 16, 64),
+      seamMat
+    );
+    equatorSeam.rotation.x = Math.PI / 2.2;
+    equatorSeam.position.y = 1.72;
+    trophyGroup.add(equatorSeam);
 
-    const currentMat = materialsRef.current[materialTheme] || goldMaterial;
+    const meridianSeam = new THREE.Mesh(
+      new THREE.TorusGeometry(sphereRadius + 0.005, 0.01, 16, 64),
+      seamMat
+    );
+    meridianSeam.rotation.y = Math.PI / 3;
+    meridianSeam.position.y = 1.72;
+    trophyGroup.add(meridianSeam);
 
-    // Group
-    const statueGroup = new THREE.Group();
-    statueGroupRef.current = statueGroup;
+    // --- STRUCTURE STEP 2: Top Ring ---
+    // Thin chrome ring wrapping around the sphere with slight engraving band
+    const topRingGeo = new THREE.TorusGeometry(sphereRadius + 0.035, 0.04, 20, 64);
+    const topRingMesh = new THREE.Mesh(topRingGeo, chromeMat);
+    topRingMesh.position.y = 1.72;
+    topRingMesh.rotation.x = Math.PI / 18; // Slight angle wrapper
+    topRingMesh.castShadow = true;
+    trophyGroup.add(topRingMesh);
 
-    // Base Platform
-    const baseMat = new THREE.MeshStandardMaterial({
-      color: 0x111827,
-      metalness: 0.8,
-      roughness: 0.3,
+    // Create Canvas Texture for Engraved Text: "Championship Trophy" / "ICC Cricket World Cup"
+    const textCanvas = document.createElement('canvas');
+    textCanvas.width = 1024;
+    textCanvas.height = 128;
+    const ctx = textCanvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, 1024, 128);
+      ctx.fillStyle = '#111111';
+      ctx.font = 'bold 36px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(
+        'ICC CRICKET WORLD CUP  ★  CHAMPIONSHIP TROPHY  ★  KING KOHLI 2011',
+        512,
+        64
+      );
+    }
+    const textTexture = new THREE.CanvasTexture(textCanvas);
+    textTexture.wrapS = THREE.RepeatWrapping;
+    textTexture.repeat.set(2, 1);
+
+    const textBandMat = new THREE.MeshStandardMaterial({
+      map: textTexture,
+      metalness: 0.9,
+      roughness: 0.1,
+      side: THREE.DoubleSide,
     });
-    const base = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.9, 0.5, 32), baseMat);
-    base.position.y = -2;
-    statueGroup.add(base);
 
-    const subBase = new THREE.Mesh(new THREE.CylinderGeometry(1.9, 2.2, 0.2, 32), baseMat);
-    subBase.position.y = -2.35;
-    statueGroup.add(subBase);
+    const textBandMesh = new THREE.Mesh(
+      new THREE.CylinderGeometry(sphereRadius + 0.042, sphereRadius + 0.042, 0.07, 64, 1, true),
+      textBandMat
+    );
+    textBandMesh.position.y = 1.72;
+    textBandMesh.rotation.x = Math.PI / 18;
+    trophyGroup.add(textBandMesh);
 
-    // Ball
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), currentMat);
-    ball.position.y = 0.2;
-    statueGroup.add(ball);
-
-    // Cricket Seams (Decorative Torus)
-    const seamGeo = new THREE.TorusGeometry(1.01, 0.02, 16, 64);
-    const seamMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 });
-    const seam = new THREE.Mesh(seamGeo, seamMat);
-    seam.rotation.x = Math.PI / 2;
-    seam.position.y = 0.2;
-    statueGroup.add(seam);
-
-    // Crossed Bats
-    const batGeo = new THREE.CylinderGeometry(0.12, 0.08, 3.6, 16);
-    const bat1 = new THREE.Mesh(batGeo, currentMat);
-    bat1.rotation.z = 0.5;
-    bat1.position.set(-0.85, 0.5, 0);
-    statueGroup.add(bat1);
-
-    const bat2 = new THREE.Mesh(batGeo, currentMat);
-    bat2.rotation.z = -0.5;
-    bat2.position.set(0.85, 0.5, 0);
-    statueGroup.add(bat2);
-
-    // Top Ring
-    const ringGeo = new THREE.TorusGeometry(1.35, 0.06, 16, 100);
-    const ring = new THREE.Mesh(ringGeo, currentMat);
-    ring.rotation.x = Math.PI / 2;
-    ring.position.y = 1.85;
-    statueGroup.add(ring);
-
-    // Small Crown / Star Accent at top
-    const crownGeo = new THREE.ConeGeometry(0.3, 0.5, 6);
-    const crown = new THREE.Mesh(crownGeo, currentMat);
-    crown.position.y = 2.3;
-    crown.rotation.y = Math.PI / 6;
-    statueGroup.add(crown);
-
-    // Floating Particles / Sparkles
-    const particleCount = 120;
+    // Floating Ambient Gold Particles
+    const particleCount = 80;
     const particleGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
 
     for (let i = 0; i < particleCount * 3; i += 3) {
-      positions[i] = (Math.random() - 0.5) * 8;
-      positions[i + 1] = (Math.random() - 0.5) * 6;
-      positions[i + 2] = (Math.random() - 0.5) * 8;
+      positions[i] = (Math.random() - 0.5) * 7;
+      positions[i + 1] = (Math.random() - 0.5) * 5 + 0.2;
+      positions[i + 2] = (Math.random() - 0.5) * 7;
     }
 
     particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     const particleMat = new THREE.PointsMaterial({
-      color: 0xfef08a,
-      size: 0.05,
+      color: new THREE.Color('#D4AF37'),
+      size: 0.035,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.75,
     });
 
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
 
-    scene.add(statueGroup);
+    scene.add(trophyGroup);
 
-    // Animation Loop
+    // 7. Animation Loop (rotation += 0.003 per prompt spec)
     let animationFrameId: number;
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      // Smooth Rotation Damping
-      if (statueGroupRef.current) {
-        statueGroupRef.current.rotation.y +=
-          (targetRotationY.current - statueGroupRef.current.rotation.y) * 0.1;
-        statueGroupRef.current.rotation.x +=
-          (targetRotationX.current - statueGroupRef.current.rotation.x) * 0.1;
+      if (trophyGroupRef.current) {
+        trophyGroupRef.current.rotation.y +=
+          (targetRotationY.current - trophyGroupRef.current.rotation.y) * 0.1;
+        trophyGroupRef.current.rotation.x +=
+          (targetRotationX.current - trophyGroupRef.current.rotation.x) * 0.1;
 
         if (!isDragging.current && autoRotate) {
-          targetRotationY.current += 0.006;
+          targetRotationY.current += 0.003; // Smooth exact prompt rotation speed
         }
       }
 
-      // Slowly rotate background particles
-      particles.rotation.y += 0.001;
+      if (cameraRef.current) {
+        cameraRef.current.position.z +=
+          (targetZoom.current - cameraRef.current.position.z) * 0.1;
+      }
 
+      particles.rotation.y += 0.0012;
       renderer.render(scene, camera);
     };
 
     animate();
 
-    // Event Handlers
+    // 8. Drag & Interactive Controls
     const handleMove = (x: number, y: number) => {
       if (isDragging.current) {
         const deltaX = x - mouseX.current;
         const deltaY = y - mouseY.current;
-        targetRotationY.current += deltaX * 0.01;
-        targetRotationX.current += deltaY * 0.01;
+        targetRotationY.current += deltaX * 0.008;
+        targetRotationX.current += deltaY * 0.006;
+        // Clamp vertical tilt
+        targetRotationX.current = Math.max(-0.4, Math.min(0.6, targetRotationX.current));
         mouseX.current = x;
         mouseY.current = y;
       }
@@ -233,6 +437,11 @@ export const StatueCanvas: React.FC = () => {
 
     const handleMouseUp = () => {
       isDragging.current = false;
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      targetZoom.current = Math.max(3.8, Math.min(8.5, targetZoom.current + e.deltaY * 0.003));
     };
 
     const handleTouchStart = (e: TouchEvent) => {
@@ -256,12 +465,13 @@ export const StatueCanvas: React.FC = () => {
     canvas.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('wheel', handleWheel, { passive: false });
 
     canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('touchend', handleTouchEnd);
 
-    // Resize Observer
+    // 9. Responsive Resize Observer
     const resizeObserver = new ResizeObserver(() => {
       if (!container || !rendererRef.current || !cameraRef.current) return;
       const width = container.clientWidth;
@@ -278,6 +488,7 @@ export const StatueCanvas: React.FC = () => {
       canvas.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      canvas.removeEventListener('wheel', handleWheel);
       canvas.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
@@ -286,37 +497,56 @@ export const StatueCanvas: React.FC = () => {
     };
   }, [autoRotate]);
 
-  // Handle material theme switch dynamically
+  // Toggle Studio Lighting
   useEffect(() => {
-    if (!statueGroupRef.current || !materialsRef.current[materialTheme]) return;
-    const newMaterial = materialsRef.current[materialTheme];
-
-    statueGroupRef.current.children.forEach((child) => {
-      if (child instanceof THREE.Mesh && child.geometry instanceof THREE.SphereGeometry) {
-        child.material = newMaterial;
-      } else if (child instanceof THREE.Mesh && child.geometry instanceof THREE.CylinderGeometry && child.geometry.parameters.height === 3.6) {
-        child.material = newMaterial;
-      } else if (child instanceof THREE.Mesh && child.geometry instanceof THREE.TorusGeometry && child.geometry.parameters.radius === 1.35) {
-        child.material = newMaterial;
-      } else if (child instanceof THREE.Mesh && child.geometry instanceof THREE.ConeGeometry) {
-        child.material = newMaterial;
-      }
-    });
-  }, [materialTheme]);
+    if (keyLightRef.current) {
+      keyLightRef.current.intensity = spotlightOn ? 4.0 : 1.2;
+    }
+  }, [spotlightOn]);
 
   const resetCamera = () => {
-    targetRotationX.current = 0;
+    targetRotationX.current = 0.15;
     targetRotationY.current = 0;
-    if (statueGroupRef.current) {
-      statueGroupRef.current.rotation.x = 0;
-      statueGroupRef.current.rotation.y = 0;
+    targetZoom.current = 6.0;
+    if (trophyGroupRef.current) {
+      trophyGroupRef.current.rotation.x = 0.15;
+      trophyGroupRef.current.rotation.y = 0;
     }
   };
 
+  const handleZoomIn = () => {
+    targetZoom.current = Math.max(3.8, targetZoom.current - 0.8);
+  };
+
+  const handleZoomOut = () => {
+    targetZoom.current = Math.min(8.5, targetZoom.current + 0.8);
+  };
+
   return (
-    <div ref={containerRef} class="w-full h-[480px] lg:h-[540px] relative flex justify-center items-center">
-      {/* Glow Backdrop */}
-      <div class="absolute inset-0 bg-yellow-600/10 blur-[130px] rounded-full pointer-events-none"></div>
+    <div
+      ref={containerRef}
+      class="w-full h-[520px] lg:h-[580px] relative flex flex-col justify-center items-center overflow-hidden"
+    >
+      {/* Background Soft Studio Glow */}
+      <div class="absolute inset-0 bg-gradient-to-b from-[#d3122a]/10 via-amber-500/10 to-transparent blur-[100px] rounded-full pointer-events-none"></div>
+
+      {/* Top Left Title Overlay */}
+      <div class="absolute top-4 left-4 z-20 flex items-center gap-3 bg-[#07090d]/90 p-3 border border-[#d3122a]/40 backdrop-blur-md shadow-2xl">
+        <img
+          src={worldCupTrophyImg}
+          alt="2011 ICC Cricket World Cup Trophy"
+          class="w-10 h-10 object-contain filter drop-shadow-md shrink-0"
+          referrerPolicy="no-referrer"
+        />
+        <div>
+          <span class="text-[9px] font-bold text-[#d3122a] uppercase tracking-[0.2em] block">
+            Hyper-Realistic 3D Render
+          </span>
+          <p class="text-xs sm:text-sm font-black text-amber-400 uppercase font-brand leading-none">
+            Championship Trophy
+          </p>
+        </div>
+      </div>
 
       {/* 3D Canvas */}
       <canvas
@@ -324,66 +554,62 @@ export const StatueCanvas: React.FC = () => {
         class="w-full h-full cursor-grab active:cursor-grabbing z-10 touch-none"
       />
 
-      {/* Interactive Controls Overlay */}
-      <div class="absolute top-4 right-4 z-20 flex flex-col gap-2 bg-gray-950/80 p-2 rounded-2xl border border-gray-800 backdrop-blur-md">
+      {/* Premium Controls Stack */}
+      <div class="absolute top-4 right-4 z-20 flex flex-col gap-2 bg-[#07090d]/90 p-2 border border-white/10 backdrop-blur-md">
         <button
           onClick={() => setAutoRotate(!autoRotate)}
           title={autoRotate ? "Pause Auto-Rotation" : "Start Auto-Rotation"}
-          class="p-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-yellow-400 hover:text-yellow-300 transition-colors flex items-center justify-center"
+          class="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
         >
-          {autoRotate ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+          {autoRotate ? <Pause className="w-4 h-4 text-amber-400" /> : <Play className="w-4 h-4 text-amber-400" />}
+        </button>
+
+        <button
+          onClick={handleZoomIn}
+          title="Zoom In"
+          class="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
+        >
+          <ZoomIn className="w-4 h-4" />
+        </button>
+
+        <button
+          onClick={handleZoomOut}
+          title="Zoom Out"
+          class="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
+        >
+          <ZoomOut className="w-4 h-4" />
         </button>
 
         <button
           onClick={resetCamera}
-          title="Reset 3D View"
-          class="p-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white transition-colors flex items-center justify-center"
+          title="Reset View"
+          class="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
         >
           <RotateCcw className="w-4 h-4" />
         </button>
-      </div>
 
-      {/* Material Selector Controls */}
-      <div class="absolute bottom-10 z-20 flex items-center gap-2 bg-gray-950/80 px-3 py-1.5 rounded-full border border-gray-800/80 backdrop-blur-md">
-        <span class="text-[10px] text-gray-400 font-mono uppercase tracking-wider flex items-center gap-1 mr-1">
-          <Layers className="w-3 h-3 text-yellow-500" /> Material:
-        </span>
         <button
-          onClick={() => setMaterialTheme('gold')}
-          class={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-full transition-all ${
-            materialTheme === 'gold'
-              ? 'bg-yellow-500 text-black shadow-md shadow-yellow-500/20'
-              : 'text-gray-400 hover:text-white bg-gray-900'
+          onClick={() => setSpotlightOn(!spotlightOn)}
+          title={spotlightOn ? "Dim Studio Lights" : "Brighten Studio Lights"}
+          class={`p-2.5 transition-colors flex items-center justify-center cursor-pointer ${
+            spotlightOn ? 'bg-[#d3122a] text-white' : 'bg-white/5 text-white/50'
           }`}
         >
-          Gold
-        </button>
-        <button
-          onClick={() => setMaterialTheme('platinum')}
-          class={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-full transition-all ${
-            materialTheme === 'platinum'
-              ? 'bg-slate-200 text-black shadow-md shadow-slate-200/20'
-              : 'text-gray-400 hover:text-white bg-gray-900'
-          }`}
-        >
-          Platinum
-        </button>
-        <button
-          onClick={() => setMaterialTheme('emerald')}
-          class={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-full transition-all ${
-            materialTheme === 'emerald'
-              ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/20'
-              : 'text-gray-400 hover:text-white bg-gray-900'
-          }`}
-        >
-          Emerald
+          <Sparkles className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Instructional Hint */}
-      <div class="absolute bottom-2 text-[10px] text-gray-500 tracking-[0.25em] font-bold uppercase animate-pulse z-10 flex items-center gap-1.5 pointer-events-none">
-        <Sparkles className="w-3 h-3 text-yellow-500" />
-        Drag or Swipe to Rotate 3D Trophy
+      {/* Bottom Label & Interaction Instructions */}
+      <div class="absolute bottom-4 z-20 flex flex-col items-center gap-1.5 pointer-events-none text-center px-4">
+        <div class="flex items-center gap-2 bg-[#07090d]/90 px-4 py-1.5 border border-amber-400/30 backdrop-blur-md shadow-lg">
+          <Trophy className="w-4 h-4 text-amber-400" />
+          <span class="text-[11px] font-black uppercase tracking-wider text-amber-400 font-brand">
+            2011 ICC Cricket World Cup Champion
+          </span>
+        </div>
+        <p class="text-[10px] text-white/50 tracking-[0.25em] font-bold uppercase animate-pulse flex items-center gap-1">
+          <span>Drag to Rotate • Scroll to Zoom</span>
+        </p>
       </div>
     </div>
   );

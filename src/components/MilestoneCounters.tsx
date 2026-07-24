@@ -15,56 +15,56 @@ export const MilestoneCounters: React.FC = () => {
 
   const milestones: (MilestoneDetail & { isGold?: boolean })[] = [
     {
+      id: 'ipl-runs',
+      title: 'IPL Runs (RCB)',
+      value: '9,336',
+      subtitle: 'All-Time Highest Scorer',
+      isGold: true,
+      description: 'Virat Kohli is the undisputed leading run-scorer in Indian Premier League (IPL) history with 9,336 runs exclusively for Royal Challengers Bengaluru.',
+      highlights: [
+        '9,336 IPL Runs (All-Time Tournament Record)',
+        '973 Runs in a Single IPL Season (2016 World Record)',
+        '8 IPL Centuries for Royal Challengers Bengaluru',
+        '55 IPL Half-Centuries with high score of 113'
+      ]
+    },
+    {
       id: 'intl-runs',
       title: 'Intl Runs',
-      value: '26,900+',
+      value: '28,359',
       subtitle: 'Across all 3 formats',
-      description: 'Virat Kohli is among the fastest players in cricket history to reach 10k, 15k, 20k, and 25k international runs.',
+      description: 'Virat Kohli has scored 28,359 international runs across Test (9,230), ODI (14,941), and T20I (4,188) formats.',
       highlights: [
-        'Fastest to 20,000 international runs (417 innings)',
-        'Fastest to 25,000 international runs (549 innings)',
-        'Highest run scorer in T20 World Cups',
-        'Averages over 49+ across test and white-ball formats combined'
+        '14,941 ODI Runs with 54 centuries (World Record)',
+        '9,230 Test Runs with 30 centuries & 254* high score',
+        '4,188 T20I Runs with 38 fifties & T20 World Cup Champion',
+        'Fastest player in cricket history to 20k and 25k international runs'
       ]
     },
     {
       id: 'total-100s',
       title: 'Total 100s',
-      value: '80',
+      value: '85',
       subtitle: '2nd Highest in History',
-      isGold: true,
-      description: '80 international centuries across Test (29), ODI (50), and T20I (1) cricket, trailing only Sachin Tendulkar.',
+      description: '85 international centuries across Test (30), ODI (54), and T20I (1) cricket, second only to Sachin Tendulkar.',
       highlights: [
-        '50 ODI Centuries (World Record)',
-        '29 Test Centuries including 7 Double-Centuries',
-        '1 T20I Century (122* vs Afghanistan)',
+        '54 ODI Centuries (World Record)',
+        '30 Test Centuries including 7 Double-Centuries',
+        '1 T20I Century (122 vs Afghanistan)',
         'Scored 100s in Australia, England, South Africa, and West Indies'
       ]
     },
     {
       id: 'odi-100s',
       title: 'ODI 100s',
-      value: '50',
+      value: '54',
       subtitle: 'World Record Holder',
-      description: 'Broke Sachin Tendulkar’s legendary record of 49 ODI centuries during the 2023 ICC World Cup Semi-Final at Wankhede Stadium.',
+      description: 'Leading all-time ODI century scorer in cricket history with 54 centuries.',
       highlights: [
-        '50th ODI century scored on November 15, 2023 vs New Zealand',
+        '54 ODI Centuries in 314 matches',
+        'Broke Sachin Tendulkar’s 49 ODI centuries record in 2023 World Cup',
         '42 centuries scored in winning causes',
-        '27 centuries scored during run chases (Chase Master)',
-        'Most ODI centuries against a single opponent (10 vs Sri Lanka)'
-      ]
-    },
-    {
-      id: 't20i-runs',
-      title: 'T20I Runs',
-      value: '4,188',
-      subtitle: 'T20 World Cup Champion',
-      description: 'Key architect of India’s T20 World Cup 2024 triumph and Player of the Tournament in two T20 World Cups (2014 & 2016).',
-      highlights: [
-        'Player of the Match in 2024 T20 World Cup Final (76 vs SA)',
-        '38 T20I Fifty+ scores',
-        'Iconic 82* off 53 balls vs Pakistan at Melbourne Cricket Ground (2022)',
-        'High score of 122* off 61 balls'
+        '27 centuries scored during run chases (Chase Master)'
       ]
     }
   ];
@@ -81,30 +81,30 @@ export const MilestoneCounters: React.FC = () => {
             }`}
           >
             <div class="flex items-center justify-between mb-4">
-              <span class="text-white/30 text-[10px] font-bold uppercase tracking-[0.3em]">
+              <span class="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em]">
                 {m.title}
               </span>
-              <Info className="w-3.5 h-3.5 text-white/20 group-hover:text-[#eab308] transition-colors" />
+              <Info className="w-3.5 h-3.5 text-white/30 group-hover:text-[#d3122a] transition-colors" />
             </div>
 
             <div>
               <p
                 class={`text-4xl sm:text-5xl font-black tracking-tight ${
-                  m.isGold ? 'text-[#eab308]' : 'text-white'
+                  m.isGold ? 'text-[#d3122a]' : 'text-white'
                 }`}
               >
                 {m.value}
               </p>
-              <span class="text-[10px] text-white/40 mt-2 block font-mono">
+              <span class="text-[10px] text-white/50 mt-2 block font-mono">
                 {m.subtitle}
               </span>
             </div>
 
             {/* Geometric Progress Indicator */}
-            <div class="w-full h-1 bg-white/5 mt-6 overflow-hidden">
+            <div class="w-full h-1 bg-white/10 mt-6 overflow-hidden">
               <div
                 class={`h-full transition-all duration-500 ${
-                  m.isGold ? 'bg-[#eab308] w-full' : 'bg-[#eab308]/70 w-[80%]'
+                  m.isGold ? 'bg-[#d3122a] w-full' : 'bg-[#d3122a]/70 w-[80%]'
                 }`}
               ></div>
             </div>
@@ -115,7 +115,7 @@ export const MilestoneCounters: React.FC = () => {
       {/* Milestone Modal */}
       {activeModal && (
         <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-          <div class="bg-[#07090d] border border-white/10 max-w-lg w-full p-6 sm:p-8 relative shadow-2xl space-y-6">
+          <div class="bg-[#0a0c12] border border-[#d3122a]/30 max-w-lg w-full p-6 sm:p-8 relative shadow-2xl space-y-6">
             <button
               onClick={() => setActiveModal(null)}
               class="absolute top-4 right-4 p-2 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
@@ -124,7 +124,7 @@ export const MilestoneCounters: React.FC = () => {
             </button>
 
             <div class="flex items-center gap-4 border-b border-white/10 pb-4">
-              <div class="p-3 bg-[#eab308]/10 text-[#eab308] border border-[#eab308]/20">
+              <div class="p-3 bg-[#d3122a]/20 text-[#d3122a] border border-[#d3122a]/40">
                 <Trophy className="w-6 h-6" />
               </div>
               <div>
@@ -133,23 +133,23 @@ export const MilestoneCounters: React.FC = () => {
                 </span>
                 <h3 class="text-2xl font-black text-white flex items-center gap-2">
                   {activeModal.title}:{' '}
-                  <span class="text-[#eab308]">{activeModal.value}</span>
+                  <span class="text-[#d3122a]">{activeModal.value}</span>
                 </h3>
               </div>
             </div>
 
-            <p class="text-white/70 text-sm leading-relaxed">
+            <p class="text-white/80 text-sm leading-relaxed">
               {activeModal.description}
             </p>
 
             <div class="space-y-2">
-              <h4 class="text-[10px] font-bold uppercase text-[#eab308] tracking-[0.3em]">
+              <h4 class="text-[10px] font-bold uppercase text-[#d3122a] tracking-[0.3em]">
                 Key Highlights
               </h4>
-              <ul class="space-y-2 text-xs text-white/80">
+              <ul class="space-y-2 text-xs text-white/90">
                 {activeModal.highlights.map((h, i) => (
                   <li key={i} class="flex items-start gap-2 bg-white/[0.02] p-3 border border-white/5">
-                    <span class="text-[#eab308] font-bold">•</span>
+                    <span class="text-[#d3122a] font-bold">•</span>
                     <span>{h}</span>
                   </li>
                 ))}
@@ -158,7 +158,7 @@ export const MilestoneCounters: React.FC = () => {
 
             <button
               onClick={() => setActiveModal(null)}
-              class="w-full py-3 bg-[#eab308] text-black font-black uppercase text-xs tracking-widest hover:bg-white transition-all"
+              class="w-full py-3 bg-[#d3122a] text-white font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all"
             >
               Close Insight
             </button>

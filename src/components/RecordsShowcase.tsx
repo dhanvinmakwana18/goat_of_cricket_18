@@ -29,7 +29,7 @@ export const RecordsShowcase: React.FC = () => {
     <section id="records" class="max-w-7xl mx-auto px-6 lg:px-12 py-16 border-t border-white/5 scroll-mt-20">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
         <div>
-          <div class="inline-block px-3 py-1 border border-[#eab308]/30 bg-[#eab308]/5 text-[10px] font-bold text-[#eab308] uppercase tracking-[0.2em] mb-3">
+          <div class="inline-block px-3 py-1 border border-[#d3122a]/40 bg-[#d3122a]/10 text-[10px] font-bold text-[#d3122a] uppercase tracking-[0.2em] mb-3">
             <span class="flex items-center gap-1.5">
               <Award className="w-3.5 h-3.5" /> Hall of Fame
             </span>
@@ -37,7 +37,7 @@ export const RecordsShowcase: React.FC = () => {
           <h2 class="text-4xl font-black text-white uppercase tracking-tight font-brand italic">
             Iconic Innings & Records
           </h2>
-          <div class="h-1.5 w-24 bg-[#eab308] mt-2"></div>
+          <div class="h-1.5 w-24 bg-[#d3122a] mt-2"></div>
         </div>
 
         {/* Format Filter */}
@@ -48,7 +48,7 @@ export const RecordsShowcase: React.FC = () => {
               onClick={() => setSelectedFormat(fmt)}
               class={`px-3 py-1.5 text-[10px] font-bold uppercase transition-all tracking-wider ${
                 selectedFormat === fmt
-                  ? 'bg-[#eab308] text-black shadow-md'
+                  ? 'bg-[#d3122a] text-white shadow-md shadow-[#d3122a]/30'
                   : 'text-white/40 hover:text-white hover:bg-white/5'
               }`}
             >
@@ -61,9 +61,9 @@ export const RecordsShowcase: React.FC = () => {
       {/* Grid of Famous Innings */}
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {filteredCenturies.map((c, i) => (
-          <div key={i} class="bg-[#07090d] border border-white/5 p-6 space-y-4 relative group hover:border-[#eab308]/50 transition-all">
+          <div key={i} class="bg-[#07090d] border border-white/5 p-6 space-y-4 relative group hover:border-[#d3122a]/50 transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[9px] font-mono font-bold uppercase px-2.5 py-1 bg-[#eab308]/10 text-[#eab308] border border-[#eab308]/20">
+              <span class="text-[9px] font-mono font-bold uppercase px-2.5 py-1 bg-[#d3122a]/10 text-[#d3122a] border border-[#d3122a]/20">
                 {c.format}
               </span>
               <span class="text-[10px] text-white/30 font-mono">{c.year}</span>
@@ -71,12 +71,12 @@ export const RecordsShowcase: React.FC = () => {
 
             <div>
               <p class="text-[10px] text-white/40 uppercase font-mono tracking-widest">vs {c.opponent}</p>
-              <p class="text-3xl font-black text-[#eab308] mt-1 font-brand">{c.score}</p>
+              <p class="text-3xl font-black text-[#d3122a] mt-1 font-brand">{c.score}</p>
             </div>
 
             <div class="pt-3 border-t border-white/5 flex items-center justify-between text-xs text-white/50">
               <span class="truncate">{c.venue}</span>
-              <Flame className="w-3.5 h-3.5 text-[#eab308] group-hover:scale-125 transition-transform shrink-0" />
+              <Flame className="w-3.5 h-3.5 text-[#d3122a] group-hover:scale-125 transition-transform shrink-0" />
             </div>
           </div>
         ))}
@@ -84,22 +84,22 @@ export const RecordsShowcase: React.FC = () => {
 
       {/* Quick Record Callout Cards */}
       <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-[#07090d] border border-white/5 p-6 border-l-4 border-l-[#eab308]">
-          <h4 class="text-[10px] uppercase font-mono text-[#eab308] font-bold mb-1">Fastest to 10,000 ODI Runs</h4>
+        <div class="bg-[#07090d] border border-white/5 p-6 border-l-4 border-l-[#d3122a]">
+          <h4 class="text-[10px] uppercase font-mono text-[#d3122a] font-bold mb-1">Fastest to 10,000 ODI Runs</h4>
           <p class="text-2xl font-black text-white font-brand">205 Innings</p>
           <p class="text-xs text-white/50 mt-2 font-light">Broke Sachin Tendulkar's record (259 innings) by 54 innings.</p>
         </div>
 
-        <div class="bg-[#07090d] border border-white/5 p-6 border-l-4 border-l-[#eab308]">
-          <h4 class="text-[10px] uppercase font-mono text-[#eab308] font-bold mb-1">Most Double Centuries by Indian in Tests</h4>
+        <div class="bg-[#07090d] border border-white/5 p-6 border-l-4 border-l-[#d3122a]">
+          <h4 class="text-[10px] uppercase font-mono text-[#d3122a] font-bold mb-1">Most Double Centuries by Indian in Tests</h4>
           <p class="text-2xl font-black text-white font-brand">7 Double 100s</p>
           <p class="text-xs text-white/50 mt-2 font-light">Surpassed Virender Sehwag and Sachin Tendulkar (6 each).</p>
         </div>
 
-        <div class="bg-[#07090d] border border-white/5 p-6 border-l-4 border-l-[#eab308]">
-          <h4 class="text-[10px] uppercase font-mono text-[#eab308] font-bold mb-1">Most Runs in Single IPL Season</h4>
+        <div class="bg-[#07090d] border border-white/5 p-6 border-l-4 border-l-[#d3122a]">
+          <h4 class="text-[10px] uppercase font-mono text-[#d3122a] font-bold mb-1">Most Runs in Single IPL Season (RCB)</h4>
           <p class="text-2xl font-black text-white font-brand">973 Runs (2016)</p>
-          <p class="text-xs text-white/50 mt-2 font-light">Included 4 centuries in a single tournament season.</p>
+          <p class="text-xs text-white/50 mt-2 font-light">Included 4 centuries in a single tournament season for RCB.</p>
         </div>
       </div>
     </section>
