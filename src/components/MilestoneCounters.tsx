@@ -70,18 +70,18 @@ export const MilestoneCounters: React.FC = () => {
   ];
 
   return (
-    <section class="max-w-7xl mx-auto px-6 lg:px-12 py-12">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-0 border border-white/5 bg-[#07090d]">
+    <section className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border border-white/5 bg-[#07090d]">
         {milestones.map((m, idx) => (
           <div
             key={m.id}
             onClick={() => setActiveModal(m)}
-            class={`p-8 md:p-10 border-b md:border-b-0 border-r border-white/5 flex flex-col justify-between cursor-pointer group transition-colors hover:bg-white/[0.02] relative ${
+            className={`p-8 md:p-10 border-b md:border-b-0 border-r border-white/5 flex flex-col justify-between cursor-pointer group transition-colors hover:bg-white/[0.02] relative ${
               idx === milestones.length - 1 ? 'border-r-0' : ''
             }`}
           >
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em]">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em]">
                 {m.title}
               </span>
               <Info className="w-3.5 h-3.5 text-white/30 group-hover:text-[#d3122a] transition-colors" />
@@ -89,21 +89,21 @@ export const MilestoneCounters: React.FC = () => {
 
             <div>
               <p
-                class={`text-4xl sm:text-5xl font-black tracking-tight ${
+                className={`text-4xl sm:text-5xl font-black tracking-tight ${
                   m.isGold ? 'text-[#d3122a]' : 'text-white'
                 }`}
               >
                 {m.value}
               </p>
-              <span class="text-[10px] text-white/50 mt-2 block font-mono">
+              <span className="text-[10px] text-white/50 mt-2 block font-mono">
                 {m.subtitle}
               </span>
             </div>
 
             {/* Geometric Progress Indicator */}
-            <div class="w-full h-1 bg-white/10 mt-6 overflow-hidden">
+            <div className="w-full h-1 bg-white/10 mt-6 overflow-hidden">
               <div
-                class={`h-full transition-all duration-500 ${
+                className={`h-full transition-all duration-500 ${
                   m.isGold ? 'bg-[#d3122a] w-full' : 'bg-[#d3122a]/70 w-[80%]'
                 }`}
               ></div>
@@ -114,42 +114,42 @@ export const MilestoneCounters: React.FC = () => {
 
       {/* Milestone Modal */}
       {activeModal && (
-        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-          <div class="bg-[#0a0c12] border border-[#d3122a]/30 max-w-lg w-full p-6 sm:p-8 relative shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+          <div className="bg-[#0a0c12] border border-[#d3122a]/30 max-w-lg w-full p-6 sm:p-8 relative shadow-2xl space-y-6">
             <button
               onClick={() => setActiveModal(null)}
-              class="absolute top-4 right-4 p-2 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+              className="absolute top-4 right-4 p-2 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
-              <div class="p-3 bg-[#d3122a]/20 text-[#d3122a] border border-[#d3122a]/40">
+            <div className="flex items-center gap-4 border-b border-white/10 pb-4">
+              <div className="p-3 bg-[#d3122a]/20 text-[#d3122a] border border-[#d3122a]/40">
                 <Trophy className="w-6 h-6" />
               </div>
               <div>
-                <span class="text-[10px] uppercase text-white/40 font-mono tracking-[0.3em] block">
+                <span className="text-[10px] uppercase text-white/40 font-mono tracking-[0.3em] block">
                   Milestone Details
                 </span>
-                <h3 class="text-2xl font-black text-white flex items-center gap-2">
+                <h3 className="text-2xl font-black text-white flex items-center gap-2">
                   {activeModal.title}:{' '}
-                  <span class="text-[#d3122a]">{activeModal.value}</span>
+                  <span className="text-[#d3122a]">{activeModal.value}</span>
                 </h3>
               </div>
             </div>
 
-            <p class="text-white/80 text-sm leading-relaxed">
+            <p className="text-white/80 text-sm leading-relaxed">
               {activeModal.description}
             </p>
 
-            <div class="space-y-2">
-              <h4 class="text-[10px] font-bold uppercase text-[#d3122a] tracking-[0.3em]">
+            <div className="space-y-2">
+              <h4 className="text-[10px] font-bold uppercase text-[#d3122a] tracking-[0.3em]">
                 Key Highlights
               </h4>
-              <ul class="space-y-2 text-xs text-white/90">
+              <ul className="space-y-2 text-xs text-white/90">
                 {activeModal.highlights.map((h, i) => (
-                  <li key={i} class="flex items-start gap-2 bg-white/[0.02] p-3 border border-white/5">
-                    <span class="text-[#d3122a] font-bold">•</span>
+                  <li key={i} className="flex items-start gap-2 bg-white/[0.02] p-3 border border-white/5">
+                    <span className="text-[#d3122a] font-bold">•</span>
                     <span>{h}</span>
                   </li>
                 ))}
@@ -158,7 +158,7 @@ export const MilestoneCounters: React.FC = () => {
 
             <button
               onClick={() => setActiveModal(null)}
-              class="w-full py-3 bg-[#d3122a] text-white font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all"
+              className="w-full py-3 bg-[#d3122a] text-white font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all"
             >
               Close Insight
             </button>

@@ -1,134 +1,79 @@
-import React, { useState } from 'react';
-import { Trophy, Menu, X, ExternalLink, Award, BarChart2, BookOpen, HardDrive } from 'lucide-react';
+import React from 'react';
 
-export const Header: React.FC = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+interface HeaderProps {
+  onOpenSubpage?: (subpage: 'chronology' | 'centuries' | 'biomechanics' | 'rivalries' | 'trophies' | 'statbot') => void;
+}
 
+export const Header: React.FC<HeaderProps> = ({ onOpenSubpage }) => {
   return (
-    <header class="sticky top-0 z-50 border-b border-white/5 bg-[#05070a]/90 backdrop-blur-md px-6 lg:px-10 py-5 transition-all">
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#07090e]/95 backdrop-blur-md px-4 lg:px-8 py-3.5 transition-all">
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
         {/* Brand Logo */}
-        <a href="#statue" class="flex items-center gap-4 group cursor-pointer">
-          <span class="text-4xl font-black tracking-tighter text-[#d3122a] border-r border-white/10 pr-6 font-brand">
+        <a href="#" className="flex items-center gap-3 group cursor-pointer shrink-0">
+          <span className="text-2xl sm:text-3xl font-black tracking-tighter text-[#d3122a] border-r border-white/10 pr-4 font-brand">
             VK18
           </span>
-          <div class="hidden sm:flex flex-col">
-            <span class="text-[10px] tracking-[0.4em] text-white/50 uppercase font-bold">
-              RCB & INDIA LEGEND
+          <div className="flex flex-col">
+            <span className="text-[10px] tracking-[0.3em] text-white/70 uppercase font-bold">
+              VIRAT KOHLI
             </span>
-            <span class="text-[9px] tracking-[0.2em] text-[#d3122a] uppercase font-mono font-bold">
-              Royal Challengers Realm
+            <span className="text-[9px] tracking-[0.2em] text-[#d3122a] uppercase font-mono font-bold">
+              KING'S TELEMETRY HUB
             </span>
           </div>
         </a>
 
-        {/* Desktop Navigation */}
-        <nav class="hidden md:flex items-center space-x-8 text-[11px] font-bold uppercase tracking-widest text-white/70">
-          <a
-            href="#timeline"
-            class="hover:text-[#d3122a] transition-colors flex items-center gap-1.5 py-1 text-[#d3122a]"
+        {/* 5 Subpage Direct Teleport Portals (Directly Visible Navbar) */}
+        <div className="flex items-center gap-1.5 bg-black/80 p-1.5 rounded-2xl border border-white/10 text-[10px] font-mono overflow-x-auto max-w-full no-scrollbar shrink-0">
+          <button
+            onClick={() => onOpenSubpage?.('chronology')}
+            className="px-3 py-1.5 rounded-xl hover:bg-rose-500/20 hover:text-rose-300 text-neutral-300 transition-colors flex items-center gap-1 font-bold uppercase whitespace-nowrap"
+            title="Open Chronology & Peak Telemetry Portal"
           >
-            <Trophy className="w-3.5 h-3.5 text-[#d3122a]" />
-            Career Timeline
-          </a>
-          <a
-            href="#stats"
-            class="hover:text-[#d3122a] transition-colors flex items-center gap-1.5 py-1"
-          >
-            <BarChart2 className="w-3.5 h-3.5 text-[#d3122a]" />
-            Statistics
-          </a>
-          <a
-            href="#about"
-            class="hover:text-[#d3122a] transition-colors flex items-center gap-1.5 py-1"
-          >
-            <BookOpen className="w-3.5 h-3.5 text-[#d3122a]" />
-            Biography
-          </a>
-          <a
-            href="#records"
-            class="hover:text-[#d3122a] transition-colors flex items-center gap-1.5 py-1"
-          >
-            <Award className="w-3.5 h-3.5 text-[#d3122a]" />
-            Hall of Fame
-          </a>
-          <a
-            href="#drive"
-            class="hover:text-[#d3122a] transition-colors flex items-center gap-1.5 py-1"
-          >
-            <HardDrive className="w-3.5 h-3.5 text-amber-400" />
-            Google Drive
-          </a>
-        </nav>
+            01. Chronology
+          </button>
 
+          <button
+            onClick={() => onOpenSubpage?.('centuries')}
+            className="px-3 py-1.5 rounded-xl hover:bg-red-500/20 hover:text-red-300 text-neutral-300 transition-colors flex items-center gap-1 font-bold uppercase whitespace-nowrap"
+            title="Open Century Archives & King's Chronicles Portal"
+          >
+            02. Centuries & Chronicles
+          </button>
 
-        {/* Status Badge */}
-        <div class="hidden lg:flex items-center space-x-3">
-          <div class="px-3 py-1 border border-[#d3122a]/40 bg-[#d3122a]/10 text-[10px] font-bold text-[#d3122a] uppercase tracking-[0.2em] flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#d3122a] animate-ping"></span>
-            RCB Theme • G.O.A.T
-          </div>
+          <button
+            onClick={() => onOpenSubpage?.('biomechanics')}
+            className="px-3 py-1.5 rounded-xl hover:bg-cyan-400/20 hover:text-cyan-300 text-neutral-300 transition-colors flex items-center gap-1 font-bold uppercase whitespace-nowrap"
+            title="Open Biomechanics Lab Portal"
+          >
+            03. Biomechanics
+          </button>
+
+          <button
+            onClick={() => onOpenSubpage?.('rivalries')}
+            className="px-3 py-1.5 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 text-neutral-300 transition-colors flex items-center gap-1 font-bold uppercase whitespace-nowrap"
+            title="Open Rivalry Matrix Portal"
+          >
+            04. Rivalries
+          </button>
+
+          <button
+            onClick={() => onOpenSubpage?.('trophies')}
+            className="px-3 py-1.5 rounded-xl hover:bg-emerald-400/20 hover:text-emerald-300 text-neutral-300 transition-colors flex items-center gap-1 font-bold uppercase whitespace-nowrap"
+            title="Open Trophy Vault Portal"
+          >
+            05. Trophies
+          </button>
+
+          <button
+            onClick={() => onOpenSubpage?.('statbot')}
+            className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-red-600/30 to-amber-500/20 hover:from-red-600/50 hover:to-amber-500/40 text-amber-300 border border-amber-500/30 transition-colors flex items-center gap-1 font-bold uppercase whitespace-nowrap shadow-[0_0_12px_rgba(245,158,11,0.2)]"
+            title="Open Grounded AI StatBot Portal"
+          >
+            06. AI StatBot 🤖
+          </button>
         </div>
-
-        {/* Mobile Toggle Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          class="md:hidden p-2 rounded text-[#d3122a] hover:bg-white/5 border border-white/10 focus:outline-none"
-          aria-label="Toggle Navigation Menu"
-        >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
       </div>
-
-      {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && (
-        <div class="md:hidden border-t border-white/10 mt-4 pt-4 pb-2 space-y-3 px-2 bg-[#07090d]">
-          <a
-            href="#statue"
-            onClick={() => setMobileMenuOpen(false)}
-            class="block px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-[#d3122a] hover:bg-white/5 transition-colors flex items-center gap-3"
-          >
-            <Trophy className="w-4 h-4 text-[#d3122a]" />
-            3D Showcase
-          </a>
-          <a
-            href="#stats"
-            onClick={() => setMobileMenuOpen(false)}
-            class="block px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-[#d3122a] hover:bg-white/5 transition-colors flex items-center gap-3"
-          >
-            <BarChart2 className="w-4 h-4 text-[#d3122a]" />
-            Statistics
-          </a>
-          <a
-            href="#about"
-            onClick={() => setMobileMenuOpen(false)}
-            class="block px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-[#d3122a] hover:bg-white/5 transition-colors flex items-center gap-3"
-          >
-            <BookOpen className="w-4 h-4 text-[#d3122a]" />
-            Biography
-          </a>
-          <a
-            href="#records"
-            onClick={() => setMobileMenuOpen(false)}
-            class="block px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-[#d3122a] hover:bg-white/5 transition-colors flex items-center gap-3"
-          >
-            <Award className="w-4 h-4 text-[#d3122a]" />
-            Records
-          </a>
-          <a
-            href="#drive"
-            onClick={() => setMobileMenuOpen(false)}
-            class="block px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-amber-400 hover:bg-white/5 transition-colors flex items-center gap-3"
-          >
-            <HardDrive className="w-4 h-4 text-amber-400" />
-            Google Drive
-          </a>
-          <div class="pt-2 border-t border-white/5 flex items-center justify-between px-4">
-            <span class="text-[10px] text-white/30 uppercase tracking-[0.3em] font-mono">VK18 PORTAL</span>
-            <span class="text-[10px] text-[#d3122a] font-bold uppercase tracking-widest">King Kohli</span>
-          </div>
-        </div>
-      )}
     </header>
   );
 };

@@ -525,24 +525,24 @@ export const StatueCanvas: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      class="w-full h-[520px] lg:h-[580px] relative flex flex-col justify-center items-center overflow-hidden"
+      className="w-full h-[520px] lg:h-[580px] relative flex flex-col justify-center items-center overflow-hidden"
     >
       {/* Background Soft Studio Glow */}
-      <div class="absolute inset-0 bg-gradient-to-b from-[#d3122a]/10 via-amber-500/10 to-transparent blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-[#d3122a]/10 via-amber-500/10 to-transparent blur-[100px] rounded-full pointer-events-none"></div>
 
       {/* Top Left Title Overlay */}
-      <div class="absolute top-4 left-4 z-20 flex items-center gap-3 bg-[#07090d]/90 p-3 border border-[#d3122a]/40 backdrop-blur-md shadow-2xl">
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-3 bg-[#07090d]/90 p-3 border border-[#d3122a]/40 backdrop-blur-md shadow-2xl">
         <img
           src={worldCupTrophyImg}
           alt="2011 ICC Cricket World Cup Trophy"
-          class="w-10 h-10 object-contain filter drop-shadow-md shrink-0"
+          className="w-10 h-10 object-contain filter drop-shadow-md shrink-0"
           referrerPolicy="no-referrer"
         />
         <div>
-          <span class="text-[9px] font-bold text-[#d3122a] uppercase tracking-[0.2em] block">
+          <span className="text-[9px] font-bold text-[#d3122a] uppercase tracking-[0.2em] block">
             Hyper-Realistic 3D Render
           </span>
-          <p class="text-xs sm:text-sm font-black text-amber-400 uppercase font-brand leading-none">
+          <p className="text-xs sm:text-sm font-black text-amber-400 uppercase font-brand leading-none">
             Championship Trophy
           </p>
         </div>
@@ -551,15 +551,15 @@ export const StatueCanvas: React.FC = () => {
       {/* 3D Canvas */}
       <canvas
         ref={canvasRef}
-        class="w-full h-full cursor-grab active:cursor-grabbing z-10 touch-none"
+        className="w-full h-full cursor-grab active:cursor-grabbing z-10 touch-none"
       />
 
       {/* Premium Controls Stack */}
-      <div class="absolute top-4 right-4 z-20 flex flex-col gap-2 bg-[#07090d]/90 p-2 border border-white/10 backdrop-blur-md">
+      <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 bg-[#07090d]/90 p-2 border border-white/10 backdrop-blur-md">
         <button
           onClick={() => setAutoRotate(!autoRotate)}
           title={autoRotate ? "Pause Auto-Rotation" : "Start Auto-Rotation"}
-          class="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
+          className="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
         >
           {autoRotate ? <Pause className="w-4 h-4 text-amber-400" /> : <Play className="w-4 h-4 text-amber-400" />}
         </button>
@@ -567,7 +567,7 @@ export const StatueCanvas: React.FC = () => {
         <button
           onClick={handleZoomIn}
           title="Zoom In"
-          class="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
+          className="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
         >
           <ZoomIn className="w-4 h-4" />
         </button>
@@ -575,7 +575,7 @@ export const StatueCanvas: React.FC = () => {
         <button
           onClick={handleZoomOut}
           title="Zoom Out"
-          class="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
+          className="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
         >
           <ZoomOut className="w-4 h-4" />
         </button>
@@ -583,7 +583,7 @@ export const StatueCanvas: React.FC = () => {
         <button
           onClick={resetCamera}
           title="Reset View"
-          class="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
+          className="p-2.5 bg-white/5 hover:bg-[#d3122a] text-white transition-colors flex items-center justify-center cursor-pointer"
         >
           <RotateCcw className="w-4 h-4" />
         </button>
@@ -591,7 +591,7 @@ export const StatueCanvas: React.FC = () => {
         <button
           onClick={() => setSpotlightOn(!spotlightOn)}
           title={spotlightOn ? "Dim Studio Lights" : "Brighten Studio Lights"}
-          class={`p-2.5 transition-colors flex items-center justify-center cursor-pointer ${
+          className={`p-2.5 transition-colors flex items-center justify-center cursor-pointer ${
             spotlightOn ? 'bg-[#d3122a] text-white' : 'bg-white/5 text-white/50'
           }`}
         >
@@ -600,14 +600,14 @@ export const StatueCanvas: React.FC = () => {
       </div>
 
       {/* Bottom Label & Interaction Instructions */}
-      <div class="absolute bottom-4 z-20 flex flex-col items-center gap-1.5 pointer-events-none text-center px-4">
-        <div class="flex items-center gap-2 bg-[#07090d]/90 px-4 py-1.5 border border-amber-400/30 backdrop-blur-md shadow-lg">
+      <div className="absolute bottom-4 z-20 flex flex-col items-center gap-1.5 pointer-events-none text-center px-4">
+        <div className="flex items-center gap-2 bg-[#07090d]/90 px-4 py-1.5 border border-amber-400/30 backdrop-blur-md shadow-lg">
           <Trophy className="w-4 h-4 text-amber-400" />
-          <span class="text-[11px] font-black uppercase tracking-wider text-amber-400 font-brand">
+          <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 font-brand">
             2011 ICC Cricket World Cup Champion
           </span>
         </div>
-        <p class="text-[10px] text-white/50 tracking-[0.25em] font-bold uppercase animate-pulse flex items-center gap-1">
+        <p className="text-[10px] text-white/50 tracking-[0.25em] font-bold uppercase animate-pulse flex items-center gap-1">
           <span>Drag to Rotate • Scroll to Zoom</span>
         </p>
       </div>

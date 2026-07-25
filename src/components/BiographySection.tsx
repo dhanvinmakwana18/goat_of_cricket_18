@@ -90,25 +90,25 @@ export const BiographySection: React.FC = () => {
   ];
 
   return (
-    <section id="about" class="max-w-7xl mx-auto px-6 lg:px-12 py-16 scroll-mt-20">
+    <section id="about" className="max-w-7xl mx-auto px-6 lg:px-12 py-16 scroll-mt-20">
       {/* Section Header */}
-      <div class="mb-12">
-        <div class="inline-block px-3 py-1 border border-[#d3122a]/40 bg-[#d3122a]/10 text-[10px] font-bold text-[#d3122a] uppercase tracking-[0.2em] mb-3">
-          <span class="flex items-center gap-1.5">
+      <div className="mb-12">
+        <div className="inline-block px-3 py-1 border border-[#d3122a]/40 bg-[#d3122a]/10 text-[10px] font-bold text-[#d3122a] uppercase tracking-[0.2em] mb-3">
+          <span className="flex items-center gap-1.5">
             <BookOpen className="w-3.5 h-3.5" /> Biography & Legacy
           </span>
         </div>
-        <h2 class="text-4xl font-black text-white uppercase tracking-tight font-brand italic">
+        <h2 className="text-4xl font-black text-white uppercase tracking-tight font-brand italic">
           The King's Chronicles
         </h2>
-        <div class="h-1.5 w-24 bg-[#d3122a] mt-2"></div>
+        <div className="h-1.5 w-24 bg-[#d3122a] mt-2"></div>
       </div>
 
       {/* Tabs */}
-      <div class="flex items-center gap-1 mb-10 border-b border-white/5 pb-4">
+      <div className="flex items-center gap-1 mb-10 border-b border-white/5 pb-4">
         <button
           onClick={() => setActiveTab('journey')}
-          class={`px-6 py-3 text-[10px] font-black uppercase transition-all flex items-center gap-2 tracking-widest ${
+          className={`px-6 py-3 text-[10px] font-black uppercase transition-all flex items-center gap-2 tracking-widest ${
             activeTab === 'journey'
               ? 'bg-[#d3122a] text-white shadow-lg shadow-[#d3122a]/30'
               : 'text-white/40 hover:text-white bg-[#07090d] border border-white/5'
@@ -120,7 +120,7 @@ export const BiographySection: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('timeline')}
-          class={`px-6 py-3 text-[10px] font-black uppercase transition-all flex items-center gap-2 tracking-widest ${
+          className={`px-6 py-3 text-[10px] font-black uppercase transition-all flex items-center gap-2 tracking-widest ${
             activeTab === 'timeline'
               ? 'bg-[#d3122a] text-white shadow-lg shadow-[#d3122a]/30'
               : 'text-white/40 hover:text-white bg-[#07090d] border border-white/5'
@@ -132,7 +132,7 @@ export const BiographySection: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('captaincy')}
-          class={`px-6 py-3 text-[10px] font-black uppercase transition-all flex items-center gap-2 tracking-widest ${
+          className={`px-6 py-3 text-[10px] font-black uppercase transition-all flex items-center gap-2 tracking-widest ${
             activeTab === 'captaincy'
               ? 'bg-[#d3122a] text-white shadow-lg shadow-[#d3122a]/30'
               : 'text-white/40 hover:text-white bg-[#07090d] border border-white/5'
@@ -145,55 +145,55 @@ export const BiographySection: React.FC = () => {
 
       {/* Tab 1: The Journey + Honours Grid */}
       {activeTab === 'journey' && (
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div class="bg-[#07090d] border border-white/5 p-8 sm:p-10 space-y-6">
-            <h3 class="text-2xl font-black text-white uppercase tracking-tighter italic font-brand flex items-center gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-[#07090d] border border-white/5 p-8 sm:p-10 space-y-6">
+            <h3 className="text-2xl font-black text-white uppercase tracking-tighter italic font-brand flex items-center gap-3">
               <Sparkles className="w-5 h-5 text-[#d3122a]" />
               The Journey
             </h3>
-            <div class="space-y-4 text-white/70 leading-relaxed text-sm font-light">
+            <div className="space-y-4 text-white/70 leading-relaxed text-sm font-light">
               <p>
                 Born in Delhi, Kohli's journey from a passionate teenager to the world's fittest cricketer is legendary. He rose to international spotlight in 2008 after leading the India U-19 team to a triumphant World Cup title in Malaysia and joining RCB in the inaugural IPL.
               </p>
               <p>
-                Under his leadership, India transformed into an aggressive, pace-bowling powerhouse in Test cricket, holding the <span class="text-white font-medium underline decoration-[#d3122a]">ICC mace for 42 consecutive months</span>. He led India to historic Test series wins in Australia (2018–19).
+                Under his leadership, India transformed into an aggressive, pace-bowling powerhouse in Test cricket, holding the <span className="text-white font-medium underline decoration-[#d3122a]">ICC mace for 42 consecutive months</span>. He led India to historic Test series wins in Australia (2018–19).
               </p>
               <p>
-                As a batsman, Kohli redefined run-chases in modern cricket. Earning the title of <span class="text-[#d3122a] font-bold">"Chase Master"</span>, he holds the record for most ODI centuries in successful run chases (27) with an astonishing average over 88 in wins.
+                As a batsman, Kohli redefined run-chases in modern cricket. Earning the title of <span className="text-[#d3122a] font-bold">"Chase Master"</span>, he holds the record for most ODI centuries in successful run chases (27) with an astonishing average over 88 in wins.
               </p>
             </div>
 
-            <div class="pt-4 border-t border-white/5 bg-[#d3122a]/5 p-5 border border-[#d3122a]/20 flex items-start gap-3">
+            <div className="pt-4 border-t border-white/5 bg-[#d3122a]/5 p-5 border border-[#d3122a]/20 flex items-start gap-3">
               <Quote className="w-6 h-6 text-[#d3122a] shrink-0 mt-0.5" />
-              <p class="text-xs text-white/80 italic font-light">
+              <p className="text-xs text-white/80 italic font-light">
                 "Self-belief and hard work will always earn you success. To me, cricket is not just a game; it is a passion that defines my entire standard of living."
               </p>
             </div>
           </div>
 
-          <div class="bg-[#07090d] border border-white/5 p-8 sm:p-10">
-            <h3 class="text-2xl font-black text-white mb-6 uppercase tracking-tighter italic font-brand flex items-center gap-3">
+          <div className="bg-[#07090d] border border-white/5 p-8 sm:p-10">
+            <h3 className="text-2xl font-black text-white mb-6 uppercase tracking-tighter italic font-brand flex items-center gap-3">
               <Award className="w-5 h-5 text-[#d3122a]" />
               Major Honours
             </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {majorHonours.map((honour, idx) => (
                 <div
                   key={idx}
-                  class="p-4 bg-[#05070a] border border-white/5 hover:border-[#d3122a]/40 transition-colors group"
+                  className="p-4 bg-[#05070a] border border-white/5 hover:border-[#d3122a]/40 transition-colors group"
                 >
-                  <div class="flex items-center justify-between mb-1">
-                    <span class="text-[9px] font-mono font-bold text-[#d3122a] bg-[#d3122a]/10 px-2 py-0.5 border border-[#d3122a]/20">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[9px] font-mono font-bold text-[#d3122a] bg-[#d3122a]/10 px-2 py-0.5 border border-[#d3122a]/20">
                       {honour.year}
                     </span>
-                    <span class="text-[9px] uppercase text-white/30 font-mono">
+                    <span className="text-[9px] uppercase text-white/30 font-mono">
                       {honour.category}
                     </span>
                   </div>
-                  <h4 class="text-xs font-bold text-white group-hover:text-[#d3122a] transition-colors mt-2">
+                  <h4 className="text-xs font-bold text-white group-hover:text-[#d3122a] transition-colors mt-2">
                     {honour.title}
                   </h4>
-                  <p class="text-[11px] text-white/50 mt-1 line-clamp-2">
+                  <p className="text-[11px] text-white/50 mt-1 line-clamp-2">
                     {honour.description}
                   </p>
                 </div>
@@ -205,27 +205,27 @@ export const BiographySection: React.FC = () => {
 
       {/* Tab 2: Timeline Milestones */}
       {activeTab === 'timeline' && (
-        <div class="relative border-l-2 border-[#d3122a] ml-4 md:ml-8 pl-6 md:pl-10 space-y-8">
+        <div className="relative border-l-2 border-[#d3122a] ml-4 md:ml-8 pl-6 md:pl-10 space-y-8">
           {timelineHighlights.map((item, index) => (
-            <div key={index} class="relative group">
+            <div key={index} className="relative group">
               {/* Dot */}
-              <div class="absolute -left-[31px] md:-left-[47px] top-1.5 w-4 h-4 bg-[#d3122a] border-4 border-[#05070a] group-hover:scale-150 transition-transform"></div>
+              <div className="absolute -left-[31px] md:-left-[47px] top-1.5 w-4 h-4 bg-[#d3122a] border-4 border-[#05070a] group-hover:scale-150 transition-transform"></div>
 
-              <div class="bg-[#07090d] border border-white/5 p-6 space-y-2">
-                <div class="flex items-center justify-between">
-                  <span class="text-[10px] font-mono font-bold text-[#d3122a] bg-[#d3122a]/10 px-3 py-1 border border-[#d3122a]/20">
+              <div className="bg-[#07090d] border border-white/5 p-6 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold text-[#d3122a] bg-[#d3122a]/10 px-3 py-1 border border-[#d3122a]/20">
                     {item.year}
                   </span>
                   {item.badge && (
-                    <span class="text-[9px] uppercase font-mono text-white/40 tracking-widest bg-[#05070a] px-2.5 py-1 border border-white/5">
+                    <span className="text-[9px] uppercase font-mono text-white/40 tracking-widest bg-[#05070a] px-2.5 py-1 border border-white/5">
                       {item.badge}
                     </span>
                   )}
                 </div>
-                <h4 class="text-base font-black text-white group-hover:text-[#d3122a] transition-colors">
+                <h4 className="text-base font-black text-white group-hover:text-[#d3122a] transition-colors">
                   {item.title}
                 </h4>
-                <p class="text-xs text-white/70 leading-relaxed font-light">
+                <p className="text-xs text-white/70 leading-relaxed font-light">
                   {item.description}
                 </p>
               </div>
@@ -236,51 +236,51 @@ export const BiographySection: React.FC = () => {
 
       {/* Tab 3: Captaincy Records */}
       {activeTab === 'captaincy' && (
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-[#07090d] border border-white/5 p-8 space-y-4">
-            <div class="p-3 w-fit bg-[#d3122a]/10 text-[#d3122a] border border-[#d3122a]/20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-[#07090d] border border-white/5 p-8 space-y-4">
+            <div className="p-3 w-fit bg-[#d3122a]/10 text-[#d3122a] border border-[#d3122a]/20">
               <Trophy className="w-6 h-6" />
             </div>
-            <h4 class="text-lg font-black text-white font-brand">Test Captaincy Record</h4>
-            <div class="space-y-2 text-xs text-white/70">
-              <p><span class="text-white font-bold">Matches:</span> 68</p>
-              <p><span class="text-[#d3122a] font-bold">Won:</span> 40 (Most by Indian Captain)</p>
-              <p><span class="text-white font-bold">Lost:</span> 17 | <span class="text-white font-bold">Drawn:</span> 11</p>
-              <p><span class="text-[#d3122a] font-bold">Win %:</span> 58.82%</p>
+            <h4 className="text-lg font-black text-white font-brand">Test Captaincy Record</h4>
+            <div className="space-y-2 text-xs text-white/70">
+              <p><span className="text-white font-bold">Matches:</span> 68</p>
+              <p><span className="text-[#d3122a] font-bold">Won:</span> 40 (Most by Indian Captain)</p>
+              <p><span className="text-white font-bold">Lost:</span> 17 | <span className="text-white font-bold">Drawn:</span> 11</p>
+              <p><span className="text-[#d3122a] font-bold">Win %:</span> 58.82%</p>
             </div>
-            <p class="text-[10px] text-white/40 pt-3 border-t border-white/5 font-mono">
+            <p className="text-[10px] text-white/40 pt-3 border-t border-white/5 font-mono">
               Led India to historic 2-1 Test victory in Australia (2018-19).
             </p>
           </div>
 
-          <div class="bg-[#07090d] border border-white/5 p-8 space-y-4">
-            <div class="p-3 w-fit bg-[#d3122a]/10 text-[#d3122a] border border-[#d3122a]/20">
+          <div className="bg-[#07090d] border border-white/5 p-8 space-y-4">
+            <div className="p-3 w-fit bg-[#d3122a]/10 text-[#d3122a] border border-[#d3122a]/20">
               <Award className="w-6 h-6" />
             </div>
-            <h4 class="text-lg font-black text-white font-brand">ODI Captaincy Record</h4>
-            <div class="space-y-2 text-xs text-white/70">
-              <p><span class="text-white font-bold">Matches:</span> 95</p>
-              <p><span class="text-[#d3122a] font-bold">Won:</span> 65</p>
-              <p><span class="text-white font-bold">Lost:</span> 27 | <span class="text-white font-bold">Tied/NR:</span> 3</p>
-              <p><span class="text-[#d3122a] font-bold">Win %:</span> 70.43%</p>
+            <h4 className="text-lg font-black text-white font-brand">ODI Captaincy Record</h4>
+            <div className="space-y-2 text-xs text-white/70">
+              <p><span className="text-white font-bold">Matches:</span> 95</p>
+              <p><span className="text-[#d3122a] font-bold">Won:</span> 65</p>
+              <p><span className="text-white font-bold">Lost:</span> 27 | <span className="text-white font-bold">Tied/NR:</span> 3</p>
+              <p><span className="text-[#d3122a] font-bold">Win %:</span> 70.43%</p>
             </div>
-            <p class="text-[10px] text-white/40 pt-3 border-t border-white/5 font-mono">
+            <p className="text-[10px] text-white/40 pt-3 border-t border-white/5 font-mono">
               Series victories in South Africa, Australia, and New Zealand.
             </p>
           </div>
 
-          <div class="bg-[#07090d] border border-white/5 p-8 space-y-4">
-            <div class="p-3 w-fit bg-[#d3122a]/10 text-[#d3122a] border border-[#d3122a]/20">
+          <div className="bg-[#07090d] border border-white/5 p-8 space-y-4">
+            <div className="p-3 w-fit bg-[#d3122a]/10 text-[#d3122a] border border-[#d3122a]/20">
               <Flag className="w-6 h-6" />
             </div>
-            <h4 class="text-lg font-black text-white font-brand">T20I Captaincy Record</h4>
-            <div class="space-y-2 text-xs text-white/70">
-              <p><span class="text-white font-bold">Matches:</span> 50</p>
-              <p><span class="text-[#d3122a] font-bold">Won:</span> 30</p>
-              <p><span class="text-white font-bold">Lost:</span> 16 | <span class="text-white font-bold">Tied/NR:</span> 4</p>
-              <p><span class="text-[#d3122a] font-bold">Win %:</span> 64.58%</p>
+            <h4 className="text-lg font-black text-white font-brand">T20I Captaincy Record</h4>
+            <div className="space-y-2 text-xs text-white/70">
+              <p><span className="text-white font-bold">Matches:</span> 50</p>
+              <p><span className="text-[#d3122a] font-bold">Won:</span> 30</p>
+              <p><span className="text-white font-bold">Lost:</span> 16 | <span className="text-white font-bold">Tied/NR:</span> 4</p>
+              <p><span className="text-[#d3122a] font-bold">Win %:</span> 64.58%</p>
             </div>
-            <p class="text-[10px] text-white/40 pt-3 border-t border-white/5 font-mono">
+            <p className="text-[10px] text-white/40 pt-3 border-t border-white/5 font-mono">
               First Asian captain to win T20I series in SENA countries.
             </p>
           </div>

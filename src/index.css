@@ -1,29 +1,58 @@
 @import "tailwindcss";
 
+:root {
+  --bg-color: #050609;
+  --text-primary: #ffffff;
+  --text-muted: #94a3b8;
+  --border-color: rgba(255, 255, 255, 0.15);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
 @layer utilities {
   .font-brand {
     font-family: 'Orbitron', sans-serif;
   }
 
-  .gold-gradient {
-    background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
+  .font-syne {
+    font-family: 'Syne', sans-serif;
+  }
+
+  .font-display {
+    font-family: 'Syne', sans-serif;
+  }
+
+  .hdr-gradient {
+    background: linear-gradient(135deg, #00f0ff 0%, #ff0055 50%, #7000ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-size: 200% auto;
     animation: shine 3s linear infinite;
   }
 
+  .crimson-gradient {
+    background: linear-gradient(135deg, #ff0055 0%, #e11d48 50%, #9f1239 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .cyan-gradient {
+    background: linear-gradient(135deg, #38bdf8 0%, #00f0ff 50%, #0284c7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
   .stat-card {
-    background: #07090d;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #080a0f;
+    border: 1px solid rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(12px);
     transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
   }
 
   .stat-card:hover {
     transform: translateY(-3px);
-    border-color: rgba(234, 179, 8, 0.5);
-    background: #0a0c10;
+    border-color: rgba(0, 240, 255, 0.6);
+    background: #0f131c;
   }
 }
 
@@ -39,8 +68,8 @@ html {
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #05070a;
-  color: #f3f4f6;
+  background-color: #050609;
+  color: #ffffff;
 }
 
 /* Custom Scrollbar */
@@ -49,19 +78,20 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #05070a;
+  background: #050609;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1a1e28;
+  background: #1e293b;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #eab308;
+  background: #00f0ff;
 }
 
 canvas {
   outline: none;
 }
+
 
