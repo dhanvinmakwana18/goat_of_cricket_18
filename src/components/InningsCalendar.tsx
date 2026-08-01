@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, CalendarPlus, X, Filter } from 'lucide-react';
-import { ALL_KOHLI_INNINGS, InningRecord } from '../data/allInningsData';
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, CalendarPlus, X, Filter, Bot, Sparkles } from 'lucide-react';
+import { InningRecord } from '../data/allInningsData';
+import { getAllInnings } from '../utils/inningsStore';
+import { AIIngestionAgentModal } from './AIIngestionAgentModal';
 
 export const InningsCalendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date(2023, 10, 1)); // Default: Nov 2023
   const [selectedInning, setSelectedInning] = useState<InningRecord | null>(null);
   const [formatFilter, setFormatFilter] = useState<'ALL' | 'ICC' | 'IPL'>('ALL');
+  const [allInningsData, setAllInningsData] = useState<InningRecord[]>(() => getAllInnings());
+  const [isAgentOpen, setIsAgentOpen] = useState(false);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setAllInningsData(getAllInnings());
+    };
+    window.addEventListener('vk_innings_updated', handleUpdate);
+    return () => window.removeEventListener('vk_innings_updated', handleUpdate);
+  }, []);
 
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -22,7 +34,7 @@ export const InningsCalendar: React.FC = () => {
   };
 
   // Filter dataset by format selection
-  const filteredInnings = ALL_KOHLI_INNINGS.filter((item) => {
+  const filteredInnings = allInningsData.filter((item) => {
     if (formatFilter === 'ICC') return item.source === 'ICC';
     if (formatFilter === 'IPL') return item.source === 'IPL';
     return true;
@@ -58,6 +70,15 @@ export const InningsCalendar: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3 flex-wrap">
+            {/* AI Agent Search & Ingestion Trigger Button */}
+            <button
+              onClick={() => setIsAgentOpen(true)}
+              className="px-3.5 py-1.5 bg-gradient-to-r from-[#d3122a] to-[#9b0b1e] hover:from-[#e21832] hover:to-[#b50e24] text-white text-xs font-bold rounded-xl shadow-[0_0_15px_rgba(211,18,42,0.4)] transition-all flex items-center space-x-1.5 cursor-pointer"
+            >
+              <Bot size={15} className="animate-pulse" />
+              <span>AI Search Agent</span>
+            </button>
+
             {/* Filter Toggle */}
             <div className="flex items-center bg-[#111827] border border-gray-800 rounded-xl p-1 text-xs">
               {(['ALL', 'ICC', 'IPL'] as const).map((mode) => (
@@ -239,6 +260,15 @@ export const InningsCalendar: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Google Search AI Ingestion Agent Modal */}
+        <AIIngestionAgentModal
+          isOpen={isAgentOpen}
+          onClose={() => setIsAgentOpen(false)}
+          onDataApplied={() => {
+            setAllInningsData(getAllInnings());
+          }}
+        />
       </div>
     </div>
   );

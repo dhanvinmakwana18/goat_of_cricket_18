@@ -1,83 +1,28 @@
-import React, { useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, CalendarPlus, X, ArrowLeft, Search, Filter, Trophy, Zap, ShieldCheck } from 'lucide-react';
-
-interface InningRecord {
-  id: string;
-  date: string; // YYYY-MM-DD
-  format: 'ODI' | 'Test' | 'T20I' | 'IPL';
-  runs: string;
-  opponent: string;
-  venue: string;
-  matchContext?: string;
-  isMilestone?: boolean;
-}
-
-// Comprehensive database of iconic Virat Kohli innings (2008 - 2026)
-const INNINGS_DB: InningRecord[] = [
-  // 2026 Matches
-  { id: '2026-1', date: '2026-07-19', format: 'ODI', runs: '74', opponent: 'England', venue: "Lord's Cricket Ground, London", matchContext: 'Resilient 74 anchoring the middle overs in the 2026 England Tour.', isMilestone: true },
-  { id: '2026-2', date: '2026-03-22', format: 'ODI', runs: '108*', opponent: 'Sri Lanka', venue: 'R. Premadasa Stadium, Colombo', matchContext: 'Flawless century in run chase, mastering spin conditions.', isMilestone: true },
-  { id: '2026-3', date: '2026-01-14', format: 'Test', runs: '89', opponent: 'South Africa', venue: 'Newlands, Cape Town', matchContext: 'Gritty 89 under extreme seam movement.', isMilestone: false },
-
-  // 2024 Matches
-  { id: '2024-1', date: '2024-06-29', format: 'T20I', runs: '76', opponent: 'South Africa', venue: 'Kensington Oval, Barbados', matchContext: 'Player of the Match in T20 World Cup 2024 Final victory!', isMilestone: true },
-  { id: '2024-2', date: '2024-05-18', format: 'IPL', runs: '47', opponent: 'CSK', venue: 'M. Chinnaswamy Stadium, Bengaluru', matchContext: 'Crucial knockout qualifier storming into IPL playoffs.', isMilestone: false },
-
-  // 2023 Matches (Historical 50th ODI Century & World Cup)
-  { id: '2023-1', date: '2023-11-15', format: 'ODI', runs: '117', opponent: 'New Zealand', venue: 'Wankhede Stadium, Mumbai', matchContext: 'RECORD-BREAKING 50th ODI CENTURY! Overtook Sachin Tendulkar in World Cup Semi-Final.', isMilestone: true },
-  { id: '2023-2', date: '2023-11-05', format: 'ODI', runs: '101*', opponent: 'South Africa', venue: 'Eden Gardens, Kolkata', matchContext: '35th Birthday Century on a turning track against Rabada and Maharaj.', isMilestone: true },
-  { id: '2023-3', date: '2023-10-19', format: 'ODI', runs: '103*', opponent: 'Bangladesh', venue: 'MCA Stadium, Pune', matchContext: 'Masterclass chase finish reaching 100 with a winning six.', isMilestone: true },
-  { id: '2023-4', date: '2023-03-12', format: 'Test', runs: '186', opponent: 'Australia', venue: 'Narendra Modi Stadium, Ahmedabad', matchContext: 'Epic 186 in BGT Test series, breaking Test century drought.', isMilestone: true },
-
-  // 2022 Matches (MCG Miracle & 71st Century)
-  { id: '2022-1', date: '2022-10-23', format: 'T20I', runs: '82*', opponent: 'Pakistan', venue: 'MCG, Melbourne', matchContext: 'THE MCG MIRACLE. Iconic "Shot of the Century" over Haris Rauf in T20 World Cup.', isMilestone: true },
-  { id: '2022-2', date: '2022-09-08', format: 'T20I', runs: '122*', opponent: 'Afghanistan', venue: 'Dubai International Stadium', matchContext: '71st International Century! First T20I Hundred off 61 balls.', isMilestone: true },
-
-  // 2021 Matches
-  { id: '2021-1', date: '2021-02-13', format: 'Test', runs: '0', opponent: 'England', venue: 'Chepauk, Chennai', matchContext: 'Dismissed early in tricky spinning conditions.', isMilestone: false },
-  { id: '2021-2', date: '2021-03-18', format: 'T20I', runs: '77*', opponent: 'England', venue: 'Narendra Modi Stadium, Ahmedabad', matchContext: 'Blistering counter-attack against Wood and Archer.', isMilestone: false },
-
-  // 2019 Matches
-  { id: '2019-1', date: '2019-11-23', format: 'Test', runs: '136', opponent: 'Bangladesh', venue: 'Eden Gardens, Kolkata', matchContext: 'First Pink-Ball Day/Night Test Century in India.', isMilestone: true },
-  { id: '2019-2', date: '2019-10-11', format: 'Test', runs: '254*', opponent: 'South Africa', venue: 'MCA Stadium, Pune', matchContext: 'Career-best 254* double century in Test cricket.', isMilestone: true },
-
-  // 2018 Matches (Peak Year)
-  { id: '2018-1', date: '2018-10-24', format: 'ODI', runs: '157*', opponent: 'West Indies', venue: 'Vizag', matchContext: 'Fastest player to reach 10,000 ODI runs in history!', isMilestone: true },
-  { id: '2018-2', date: '2018-08-02', format: 'Test', runs: '149', opponent: 'England', venue: 'Edgbaston, Birmingham', matchContext: 'Masterful 149 rescuing India and conquering English conditions.', isMilestone: true },
-  { id: '2018-3', date: '2018-01-15', format: 'Test', runs: '153', opponent: 'South Africa', venue: 'SuperSport Park, Centurion', matchContext: 'Sole warrior century on a hyper-fast Centurion pitch.', isMilestone: true },
-
-  // 2016 Matches (IPL 973 Runs & T20 WC)
-  { id: '2016-1', date: '2016-03-27', format: 'T20I', runs: '82*', opponent: 'Australia', venue: 'PCA Stadium, Mohali', matchContext: 'Peak T20 chase masterclass sending India to T20 World Cup semi-finals.', isMilestone: true },
-  { id: '2016-2', date: '2016-05-18', format: 'IPL', runs: '113', opponent: 'KXIP', venue: 'M. Chinnaswamy Stadium, Bengaluru', matchContext: 'Scored 113 in 15-over rain-affected match with 9 stitches on hand.', isMilestone: true },
-
-  // 2014 Matches
-  { id: '2014-1', date: '2014-12-11', format: 'Test', runs: '115', opponent: 'Australia', venue: 'Adelaide Oval', matchContext: 'Twin centuries on Test captaincy debut at Adelaide.', isMilestone: true },
-  { id: '2014-2', date: '2014-12-14', format: 'Test', runs: '141', opponent: 'Australia', venue: 'Adelaide Oval', matchContext: 'Sensational 4th innings chase effort.', isMilestone: true },
-
-  // 2013 Matches
-  { id: '2013-1', date: '2013-10-16', format: 'ODI', runs: '100*', opponent: 'Australia', venue: 'Sawai Mansingh Stadium, Jaipur', matchContext: 'Fastest ODI century by an Indian (52 balls) chasing 360.', isMilestone: true },
-
-  // 2012 Matches
-  { id: '2012-1', date: '2012-03-18', format: 'ODI', runs: '183', opponent: 'Pakistan', venue: 'Sher-e-Bangla, Mirpur', matchContext: 'Highest individual ODI score (183) chasing down 330+ vs Pakistan.', isMilestone: true },
-  { id: '2012-2', date: '2012-02-28', format: 'ODI', runs: '133*', opponent: 'Sri Lanka', venue: 'Hobart, Australia', matchContext: 'Annihilated Malinga and Sri Lanka, chasing 321 in 36.4 overs.', isMilestone: true },
-
-  // 2011 Matches (World Cup Winner)
-  { id: '2011-1', date: '2011-04-02', format: 'ODI', runs: '35', opponent: 'Sri Lanka', venue: 'Wankhede Stadium, Mumbai', matchContext: 'Crucial 83-run partnership with Gambhir in CWC 2011 Final.', isMilestone: true },
-
-  // 2009 & 2008 Matches
-  { id: '2009-1', date: '2009-12-24', format: 'ODI', runs: '107', opponent: 'Sri Lanka', venue: 'Eden Gardens, Kolkata', matchContext: 'Maiden International ODI Century! Handed MoM trophy to Gambhir.', isMilestone: true },
-  { id: '2008-1', date: '2008-08-18', format: 'ODI', runs: '12', opponent: 'Sri Lanka', venue: 'Dambulla', matchContext: 'International Cricket Debut as opening batsman.', isMilestone: false },
-];
+import React, { useState, useMemo, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, CalendarPlus, X, ArrowLeft, Search, Filter, Trophy, Zap, ShieldCheck, Bot } from 'lucide-react';
+import { getAllInnings } from '../../utils/inningsStore';
+import { InningRecord } from '../../data/allInningsData';
+import { AIIngestionAgentModal } from '../AIIngestionAgentModal';
 
 interface ChronologySubpageProps {
   onClose: () => void;
 }
 
 export const ChronologySubpage: React.FC<ChronologySubpageProps> = ({ onClose }) => {
-  const [currentDate, setCurrentDate] = useState<Date>(new Date(2026, 6, 1)); // Default July 2026
-  const [selectedInning, setSelectedInning] = useState<InningRecord | null>(null);
-  const [selectedFormatFilter, setSelectedFormatFilter] = useState<string>('ALL');
+  const [currentDate, setCurrentDate] = useState<Date>(new Date(2023, 10, 1)); // Default: Nov 2023
+  const [selectedFormatFilter, setSelectedFormatFilter] = useState<'ALL' | 'ODI' | 'TEST' | 'T20I' | 'IPL'>('ALL');
+  const [selectedInning, setSelectedInning] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [inningsDataset, setInningsDataset] = useState<InningRecord[]>(() => getAllInnings());
+  const [isAgentOpen, setIsAgentOpen] = useState(false);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setInningsDataset(getAllInnings());
+    };
+    window.addEventListener('vk_innings_updated', handleUpdate);
+    return () => window.removeEventListener('vk_innings_updated', handleUpdate);
+  }, []);
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -101,7 +46,7 @@ export const ChronologySubpage: React.FC<ChronologySubpageProps> = ({ onClose })
   // Find innings matching date formatted YYYY-MM-DD
   const getInningsForDate = (day: number) => {
     const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return INNINGS_DB.filter((inning) => {
+    return inningsDataset.filter((inning) => {
       const matchDate = inning.date === formattedDate;
       const matchFormat = selectedFormatFilter === 'ALL' || inning.format === selectedFormatFilter;
       const matchQuery = !searchQuery || 
@@ -113,9 +58,9 @@ export const ChronologySubpage: React.FC<ChronologySubpageProps> = ({ onClose })
   };
 
   // Google Calendar Sync URL Generator
-  const syncToGoogleCalendar = (inning: InningRecord) => {
+  const syncToGoogleCalendar = (inning: any) => {
     const title = `Virat Kohli: ${inning.runs} runs vs ${inning.opponent} (${inning.format})`;
-    const details = `Format: ${inning.format}%0AOpponent: ${inning.opponent}%0ARuns Scored: ${inning.runs}%0AVenue: ${inning.venue}%0A%0AContext: ${inning.matchContext || 'Historic Milestone Sync'}`;
+    const details = `Format: ${inning.format}%0AOpponent: ${inning.opponent}%0ARuns Scored: ${inning.runs}%0AVenue: ${inning.venue}%0A%0AContext: ${inning.notes || inning.matchContext || 'Historic Milestone Sync'}`;
     const dateStr = inning.date.replace(/-/g, '');
     const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${details}&dates=${dateStr}T090000Z/${dateStr}T170000Z`;
     window.open(url, '_blank');
@@ -124,8 +69,8 @@ export const ChronologySubpage: React.FC<ChronologySubpageProps> = ({ onClose })
   // Total recorded innings stats in view
   const monthInnings = useMemo(() => {
     const yearMonthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
-    return INNINGS_DB.filter((i) => i.date.startsWith(yearMonthStr));
-  }, [year, month]);
+    return inningsDataset.filter((i) => i.date.startsWith(yearMonthStr));
+  }, [year, month, inningsDataset]);
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0a0f18] text-white font-sans selection:bg-cyan-500 selection:text-black">
@@ -152,6 +97,14 @@ export const ChronologySubpage: React.FC<ChronologySubpageProps> = ({ onClose })
 
         {/* Search & Format Filter HUD */}
         <div className="flex items-center gap-3 flex-wrap">
+          <button
+            onClick={() => setIsAgentOpen(true)}
+            className="px-3.5 py-1.5 bg-gradient-to-r from-[#d3122a] to-[#9b0b1e] hover:from-[#e21832] hover:to-[#b50e24] text-white text-xs font-bold rounded-lg shadow-[0_0_15px_rgba(211,18,42,0.4)] transition-all flex items-center space-x-1.5 cursor-pointer"
+          >
+            <Bot size={15} className="animate-pulse" />
+            <span>AI Search Agent</span>
+          </button>
+
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-gray-500" />
             <input
@@ -302,7 +255,7 @@ export const ChronologySubpage: React.FC<ChronologySubpageProps> = ({ onClose })
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            {INNINGS_DB.filter((i) => i.isMilestone).slice(0, 6).map((m) => (
+            {inningsDataset.filter((i: any) => i.isCentury || i.isMilestone).slice(0, 6).map((m: any) => (
               <div
                 key={m.id}
                 onClick={() => setSelectedInning(m)}
@@ -381,6 +334,15 @@ export const ChronologySubpage: React.FC<ChronologySubpageProps> = ({ onClose })
           </div>
         </div>
       )}
+
+      {/* AI Search Agent Ingestion Modal */}
+      <AIIngestionAgentModal
+        isOpen={isAgentOpen}
+        onClose={() => setIsAgentOpen(false)}
+        onDataApplied={() => {
+          setInningsDataset(getAllInnings());
+        }}
+      />
     </div>
   );
 };

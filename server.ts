@@ -162,6 +162,109 @@ Deliver live, authentic audio-style commentary calling this exact moment in real
   app.post("/api/commentary", handleCommentary);
   app.post("/api/commentary/generate", handleCommentary);
 
+  // API Route: AI Data Mining Agent for Virat Kohli Innings (Google Search Grounded)
+  const handleInningsSearchAgent = async (req: express.Request, res: express.Response) => {
+    try {
+      const { query } = req.body || {};
+      if (!query || typeof query !== "string") {
+        return res.status(400).json({ error: "Invalid request: 'query' parameter must be a string." });
+      }
+
+      const trimmedQuery = query.trim();
+      if (trimmedQuery.length === 0 || trimmedQuery.length > 500) {
+        return res.status(400).json({ error: "Query length must be between 1 and 500 characters." });
+      }
+
+      const apiKey = process.env.GEMINI_API_KEY || "";
+      if (!apiKey) {
+        return res.status(503).json({ error: "GEMINI_API_KEY is not configured on the server." });
+      }
+
+      const { GoogleGenAI } = await import("@google/genai");
+      const ai = new GoogleGenAI({ apiKey, httpOptions: { headers: { "User-Agent": "aistudio-build" } } });
+
+      const systemPrompt = `
+You are an expert AI Cricket Data Scraper & Innings Finder Agent.
+Your mission is to search Google for official, verified match scorecards and match statistics for Virat Kohli based on the user's request.
+
+For each match inning found from official sources (like ESPNcricinfo, ICC-cricket.com, IPLT20.com), extract:
+1. Match date in strict 'YYYY-MM-DD' format (e.g. 2023-11-15)
+2. Format: Exactly one of 'ODI', 'TEST', 'T20I', or 'IPL'
+3. Runs: Exact score string (e.g., '117', '82*', '0')
+4. Opponent: Full name of opposition team (e.g., 'New Zealand', 'Australia', 'CSK', 'Pakistan')
+5. Venue: Full stadium and city name (e.g., 'Wankhede Stadium, Mumbai')
+6. Source: 'ICC' for international matches or 'IPL' for Indian Premier League
+7. isCentury: boolean (true if runs >= 100)
+8. isZero: boolean (true if runs === 0 or '0*')
+9. notes: concise highlight string detailing match context or milestone
+
+Format your response as a STRICT JSON object with no markdown formatting:
+{
+  "summary": "Found X verified match innings for Virat Kohli...",
+  "innings": [
+    {
+      "id": "agent-YYYYMMDD-FORMAT-OPP",
+      "date": "YYYY-MM-DD",
+      "format": "ODI" | "TEST" | "T20I" | "IPL",
+      "runs": "117",
+      "opponent": "New Zealand",
+      "venue": "Wankhede Stadium, Mumbai",
+      "source": "ICC",
+      "isCentury": true,
+      "isZero": false,
+      "notes": "Record 50th ODI century in CWC 2023 Semi-Final"
+    }
+  ]
+}
+Return ONLY valid JSON.
+`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3.6-flash",
+        contents: `Search Google for official Virat Kohli match scorecards and innings records according to this query: "${trimmedQuery}". Extract accurate match dates, format, score, opponent, venue, and highlights into JSON.`,
+        config: {
+          systemInstruction: systemPrompt,
+          temperature: 0.2,
+          tools: [{ googleSearch: {} }],
+        },
+      });
+
+      const rawText = response.text || "";
+      const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+      const sources = groundingChunks
+        .filter((c: any) => c.web?.uri)
+        .map((c: any) => ({ title: c.web.title || "Web Source", uri: c.web.uri }));
+
+      // Clean markdown code blocks if returned
+      let cleanedJsonStr = rawText.trim();
+      if (cleanedJsonStr.startsWith("```")) {
+        cleanedJsonStr = cleanedJsonStr.replace(/^```(json)?/i, "").replace(/```$/, "").trim();
+      }
+
+      let parsedData: any = {};
+      try {
+        parsedData = JSON.parse(cleanedJsonStr);
+      } catch (parseError) {
+        console.warn("[Agent Search] Could not parse exact JSON, creating fallback wrapper", parseError);
+        parsedData = {
+          summary: rawText.slice(0, 300),
+          innings: [],
+        };
+      }
+
+      return res.json({
+        summary: parsedData.summary || `Extracted innings for: "${trimmedQuery}"`,
+        innings: Array.isArray(parsedData.innings) ? parsedData.innings : [],
+        groundingSources: sources,
+      });
+    } catch (error: any) {
+      console.error("[Backend Log] Error in Innings Search Agent:", error?.message || error);
+      return res.status(500).json({ error: "Failed to execute AI search agent query." });
+    }
+  };
+
+  app.post("/api/agent/search-innings", handleInningsSearchAgent);
+
   // Healthcheck API
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
