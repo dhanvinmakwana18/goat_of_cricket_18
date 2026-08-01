@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { StatBotResponse } from '../services/rag/types';
-import { StatBotService } from '../services/rag/statBotService';
-import { Bot, Sparkles, Send, ExternalLink, ShieldCheck, Database, Search, RefreshCw, Cpu, Award } from 'lucide-react';
+import { Bot, Sparkles, Send, ExternalLink, ShieldCheck, Database, Search, RefreshCw, Cpu } from 'lucide-react';
 
 interface StatBotWidgetProps {
-  apiKey?: string;
   onClose?: () => void;
 }
 
-export const StatBotWidget: React.FC<StatBotWidgetProps> = ({ apiKey, onClose }) => {
+export const StatBotWidget: React.FC<StatBotWidgetProps> = ({ onClose }) => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<StatBotResponse | null>(null);
@@ -28,8 +26,7 @@ export const StatBotWidget: React.FC<StatBotWidgetProps> = ({ apiKey, onClose })
     setLoading(true);
     setErrorMsg(null);
     try {
-      // 1. Try server API route first
-      const apiResp = await fetch('/api/rag/query', {
+      const apiResp = await fetch('/api/statbot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: queryText }),
@@ -39,15 +36,8 @@ export const StatBotWidget: React.FC<StatBotWidgetProps> = ({ apiKey, onClose })
         const data: StatBotResponse = await apiResp.json();
         setResult(data);
       } else {
-        // Fallback to client service if API key is present
-        if (apiKey) {
-          const bot = new StatBotService(apiKey);
-          const res = await bot.answerCricketQuery(queryText);
-          setResult(res);
-        } else {
-          const errData = await apiResp.json().catch(() => ({}));
-          throw new Error(errData.message || 'Failed to fetch grounded query answer.');
-        }
+        const errData = await apiResp.json().catch(() => ({}));
+        throw new Error(errData.message || errData.error || 'Failed to fetch grounded query answer from server.');
       }
     } catch (err: any) {
       console.error('StatBot Query Error:', err);

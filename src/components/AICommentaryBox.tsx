@@ -4,7 +4,6 @@ import { CommentatorID } from '../services/commentary/commentatorPrompts';
 import { Radio, Sparkles, Volume2, Mic } from 'lucide-react';
 
 interface AICommentaryBoxProps {
-  apiKey?: string;
   inningsContext: {
     runs: number;
     balls: number;
@@ -15,7 +14,7 @@ interface AICommentaryBoxProps {
   };
 }
 
-export const AICommentaryBox: React.FC<AICommentaryBoxProps> = ({ apiKey = '', inningsContext }) => {
+export const AICommentaryBox: React.FC<AICommentaryBoxProps> = ({ inningsContext }) => {
   const [activeCommentator, setActiveCommentator] = useState<CommentatorID>('harsha');
   const [commentary, setCommentary] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -30,7 +29,7 @@ export const AICommentaryBox: React.FC<AICommentaryBoxProps> = ({ apiKey = '', i
     setActiveCommentator(id);
     setIsGenerating(true);
     
-    const engine = new CommentaryEngine(apiKey);
+    const engine = new CommentaryEngine();
     const result = await engine.generateLiveCommentary(inningsContext, id);
     
     setCommentary(result);

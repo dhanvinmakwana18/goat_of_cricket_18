@@ -471,20 +471,25 @@ export const StatueCanvas: React.FC = () => {
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('touchend', handleTouchEnd);
 
-    // 9. Responsive Resize Observer
+    // 9. Responsive Resize Observer with rAF to prevent loop notification errors
+    let resizeAnimationFrameId: number;
     const resizeObserver = new ResizeObserver(() => {
-      if (!container || !rendererRef.current || !cameraRef.current) return;
-      const width = container.clientWidth;
-      const height = container.clientHeight;
-      cameraRef.current.aspect = width / height;
-      cameraRef.current.updateProjectionMatrix();
-      rendererRef.current.setSize(width, height);
+      resizeAnimationFrameId = requestAnimationFrame(() => {
+        if (!container || !rendererRef.current || !cameraRef.current) return;
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        if (width === 0 || height === 0) return;
+        cameraRef.current.aspect = width / height;
+        cameraRef.current.updateProjectionMatrix();
+        rendererRef.current.setSize(width, height);
+      });
     });
 
     resizeObserver.observe(container);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(resizeAnimationFrameId);
       canvas.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);

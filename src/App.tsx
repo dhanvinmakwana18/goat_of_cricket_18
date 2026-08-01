@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { MilestoneCounters } from './components/MilestoneCounters';
+import { CareerTimeline } from './components/CareerTimeline';
 import { BiographySection } from './components/BiographySection';
 import { MilestoneCalendarPortal } from './components/MilestoneCalendarPortal';
 import { GoogleDriveSection } from './components/GoogleDriveSection';
@@ -34,6 +35,9 @@ export default function App() {
         {/* Core Career Telemetry Counters */}
         <MilestoneCounters />
 
+        {/* Innings Archive & Career Calendar */}
+        <CareerTimeline />
+
         {/* TELEPORT PIPELINE GRID: 5 Dedicated Subpage Portals */}
         <section className="max-w-7xl mx-auto px-4 md:px-8 space-y-6">
           <div className="border-l-2 border-[#d3122a] pl-4">
@@ -49,13 +53,13 @@ export default function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* PORTAL 01: Chronology & Peak Analytics */}
+            {/* PORTAL 01: Innings Archive & Career Calendar */}
             <SubpageHoverTrigger
               portalCode="PORTAL-01"
-              badgeText="CAREER CHRONOLOGY MATRIX"
-              title="01. Career Chronology & Peak Analytics"
-              subtitle="Launch complete year-by-year format statistics, season-vs-season comparisons, and peak performance analysis."
-              themeColor="crimson"
+              badgeText="INNINGS CALENDAR ARCHIVE"
+              title="01. Innings Archive & Career Calendar"
+              subtitle="Hover cursor over portal to launch interactive calendar of match records, milestone scores, and Google Calendar sync."
+              themeColor="cyan"
               onTrigger={() => setActiveSubpage('chronology')}
             />
 
